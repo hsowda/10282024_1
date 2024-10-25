@@ -18,13 +18,8 @@ function updatePageTranslations() {
     console.log('Updating page translations...');
     document.querySelectorAll('[data-translate]').forEach(element => {
         const key = element.getAttribute('data-translate');
-        console.log('Translating element:', element, 'with key:', key);
         if (translations[key]) {
-            if (element.tagName.toLowerCase() === 'a' || element.tagName.toLowerCase() === 'button') {
-                element.textContent = translations[key];
-            } else {
-                element.textContent = translations[key];
-            }
+            element.textContent = translations[key];
             console.log('Translation applied:', translations[key]);
         } else {
             console.warn('Missing translation for key:', key);
@@ -37,38 +32,55 @@ function toggleSections(section) {
     const welcomeSection = document.getElementById('welcome-section');
     const signupSection = document.getElementById('signup-section');
     
-    if (section === 'signup') {
-        welcomeSection.classList.add('hidden');
-        signupSection.classList.remove('hidden');
-    } else {
-        welcomeSection.classList.remove('hidden');
-        signupSection.classList.add('hidden');
+    if (welcomeSection && signupSection) {
+        if (section === 'signup') {
+            welcomeSection.classList.add('hidden');
+            signupSection.classList.remove('hidden');
+        } else {
+            welcomeSection.classList.remove('hidden');
+            signupSection.classList.add('hidden');
+        }
     }
 }
 
-// Form validation and submission
-document.addEventListener('DOMContentLoaded', function() {
-    console.log('DOM Content Loaded');
-    const signupForm = document.getElementById('signup-form');
-    const loginForm = document.getElementById('login-form');
+// Initialize language selector
+function initializeLanguageSelector() {
     const languageSelect = document.getElementById('language');
-    
-    // Language change handler
-    languageSelect.addEventListener('change', (e) => {
-        console.log('Language changed to:', e.target.value);
-        currentLanguage = e.target.value;
+    if (languageSelect) {
+        languageSelect.addEventListener('change', (e) => {
+            console.log('Language changed to:', e.target.value);
+            currentLanguage = e.target.value;
+            loadTranslations(currentLanguage);
+        });
+        
+        // Initial translation load
+        console.log('Loading initial translations');
         loadTranslations(currentLanguage);
-    });
-    
-    // Initial translation load
-    console.log('Loading initial translations');
-    loadTranslations(currentLanguage);
-    
-    // Signup form validation
+    }
+}
+
+// Initialize signup form
+function initializeSignupForm() {
+    const signupForm = document.getElementById('signup-form');
     if (signupForm) {
         signupForm.addEventListener('submit', function(e) {
-            const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword').value;
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            
+            if (!passwordInput || !confirmPasswordInput) {
+                e.preventDefault();
+                alert('Password fields not found!');
+                return false;
+            }
+            
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            
+            if (!password || !confirmPassword) {
+                e.preventDefault();
+                alert('Please fill in all password fields!');
+                return false;
+            }
             
             if (password !== confirmPassword) {
                 e.preventDefault();
@@ -83,18 +95,31 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
     }
+}
 
-    // Login form validation
+// Initialize login form
+function initializeLoginForm() {
+    const loginForm = document.getElementById('login-form');
     if (loginForm) {
         loginForm.addEventListener('submit', function(e) {
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-password').value;
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
             
-            if (!email || !password) {
+            if (!emailInput || !passwordInput || !emailInput.value || !passwordInput.value) {
                 e.preventDefault();
                 alert('Please fill in all fields!');
                 return false;
             }
         });
     }
+}
+
+// Main initialization
+document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM Content Loaded');
+    
+    // Initialize all components
+    initializeLanguageSelector();
+    initializeSignupForm();
+    initializeLoginForm();
 });
