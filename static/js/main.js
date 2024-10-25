@@ -40,145 +40,152 @@ function toggleSections(section) {
 
 // Modal handling
 function createModal(title, iframeSrc) {
-    const modal = document.createElement('div');
-    modal.className = 'modal';
-    modal.innerHTML = `
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2>${title}</h2>
-                <button class="modal-close">&times;</button>
+    try {
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.innerHTML = `
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>${title}</h2>
+                    <button class="modal-close">&times;</button>
+                </div>
+                <div class="modal-body">
+                    <iframe 
+                        src="${iframeSrc}"
+                        width="600"
+                        height="400"
+                        frameborder="0"
+                        allowfullscreen
+                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        style="border: none; width: 100%; height: 400px;">
+                    </iframe>
+                </div>
             </div>
-            <div class="modal-body">
-                <iframe 
-                    src="${iframeSrc}"
-                    width="600"
-                    height="400"
-                    frameborder="0"
-                    allowfullscreen
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    style="border: none; width: 100%; height: 400px;">
-                </iframe>
-            </div>
-        </div>
-    `;
+        `;
 
-    document.body.appendChild(modal);
+        document.body.appendChild(modal);
 
-    const closeButton = modal.querySelector('.modal-close');
-    closeButton.onclick = () => {
-        modal.remove();
-    };
-
-    window.onclick = (event) => {
-        if (event.target === modal) {
-            modal.remove();
+        const closeButton = modal.querySelector('.modal-close');
+        if (closeButton) {
+            closeButton.onclick = () => modal.remove();
         }
-    };
+
+        window.onclick = (event) => {
+            if (event.target === modal) {
+                modal.remove();
+            }
+        };
+    } catch (error) {
+        console.error('Error creating modal:', error);
+    }
 }
 
 // Initialize watch now buttons
 function initializeWatchNowButtons() {
-    const watchButtons = document.querySelectorAll('.watch-now-button');
-    watchButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const title = button.getAttribute('data-title') || 'Watch Now';
-            const iframeSrc = button.getAttribute('data-src') || 'https://beautifuldisaster-311.w3spaces.com';
-            createModal(title, iframeSrc);
+    try {
+        const watchButtons = document.querySelectorAll('.watch-now-button');
+        if (watchButtons.length === 0) return;
+
+        watchButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const title = button.getAttribute('data-title') || 'Watch Now';
+                const iframeSrc = button.getAttribute('data-src') || '';
+                if (iframeSrc) {
+                    createModal(title, iframeSrc);
+                }
+            });
         });
-    });
+    } catch (error) {
+        console.error('Error initializing watch buttons:', error);
+    }
 }
 
 // Initialize language selector
 function initializeLanguageSelector() {
-    const languageSelect = document.getElementById('language');
-    if (!languageSelect) {
-        return; // Silently return if language selector doesn't exist on this page
-    }
-
-    // Remove any existing listeners before adding a new one
-    const newLanguageSelect = languageSelect.cloneNode(true);
-    languageSelect.parentNode.replaceChild(newLanguageSelect, languageSelect);
-    
-    newLanguageSelect.addEventListener('change', (e) => {
-        currentLanguage = e.target.value;
+    try {
+        const languageSelect = document.getElementById('language');
+        if (!languageSelect) return;
+        
+        // Initial translation load
         loadTranslations(currentLanguage);
-    });
-    
-    // Initial translation load
-    loadTranslations(currentLanguage);
+        
+        // Add change event listener
+        languageSelect.addEventListener('change', (e) => {
+            currentLanguage = e.target.value;
+            loadTranslations(currentLanguage);
+        });
+    } catch (error) {
+        console.error('Error initializing language selector:', error);
+    }
 }
 
 // Initialize signup form
 function initializeSignupForm() {
-    const signupForm = document.getElementById('signup-form');
-    if (!signupForm) {
-        return;
+    try {
+        const signupForm = document.getElementById('signup-form');
+        if (!signupForm) return;
+        
+        signupForm.addEventListener('submit', function(e) {
+            const passwordInput = document.getElementById('password');
+            const confirmPasswordInput = document.getElementById('confirmPassword');
+            
+            if (!passwordInput || !confirmPasswordInput) {
+                e.preventDefault();
+                alert('Password fields not found!');
+                return;
+            }
+            
+            const password = passwordInput.value;
+            const confirmPassword = confirmPasswordInput.value;
+            
+            if (!password || !confirmPassword) {
+                e.preventDefault();
+                alert('Please fill in all password fields!');
+                return;
+            }
+            
+            if (password !== confirmPassword) {
+                e.preventDefault();
+                alert('Passwords do not match!');
+                return;
+            }
+            
+            if (password.length < 8) {
+                e.preventDefault();
+                alert('Password must be at least 8 characters long!');
+                return;
+            }
+        });
+    } catch (error) {
+        console.error('Error initializing signup form:', error);
     }
-
-    const newForm = signupForm.cloneNode(true);
-    signupForm.parentNode.replaceChild(newForm, signupForm);
-    
-    newForm.addEventListener('submit', function(e) {
-        const passwordInput = document.getElementById('password');
-        const confirmPasswordInput = document.getElementById('confirmPassword');
-        
-        if (!passwordInput || !confirmPasswordInput) {
-            e.preventDefault();
-            alert('Password fields not found!');
-            return;
-        }
-        
-        const password = passwordInput.value;
-        const confirmPassword = confirmPasswordInput.value;
-        
-        if (!password || !confirmPassword) {
-            e.preventDefault();
-            alert('Please fill in all password fields!');
-            return;
-        }
-        
-        if (password !== confirmPassword) {
-            e.preventDefault();
-            alert('Passwords do not match!');
-            return;
-        }
-        
-        if (password.length < 8) {
-            e.preventDefault();
-            alert('Password must be at least 8 characters long!');
-            return;
-        }
-    });
 }
 
 // Initialize login form
 function initializeLoginForm() {
-    const loginForm = document.getElementById('login-form');
-    if (!loginForm) {
-        return;
-    }
-
-    const newForm = loginForm.cloneNode(true);
-    loginForm.parentNode.replaceChild(newForm, loginForm);
-    
-    newForm.addEventListener('submit', function(e) {
-        const emailInput = document.getElementById('email');
-        const passwordInput = document.getElementById('password');
+    try {
+        const loginForm = document.querySelector('form[action*="login"]');
+        if (!loginForm) return;
         
-        if (!emailInput?.value || !passwordInput?.value) {
-            e.preventDefault();
-            alert('Please fill in all fields!');
-            return;
-        }
-    });
+        loginForm.addEventListener('submit', function(e) {
+            const emailInput = document.getElementById('email');
+            const passwordInput = document.getElementById('password');
+            
+            if (!emailInput?.value || !passwordInput?.value) {
+                e.preventDefault();
+                alert('Please fill in all fields!');
+                return;
+            }
+        });
+    } catch (error) {
+        console.error('Error initializing login form:', error);
+    }
 }
 
 // Main initialization - using a flag to prevent multiple initializations
 let initialized = false;
 document.addEventListener('DOMContentLoaded', function() {
-    if (initialized) {
-        return;
-    }
+    if (initialized) return;
     initialized = true;
     
     // Initialize all components
