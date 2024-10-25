@@ -9,8 +9,14 @@
             class="ad-frame"
             width="600" 
             height="400"
-            frameborder="0"
-            allowfullscreen>
+            title="Advertisement Content"
+            loading="lazy"
+            sandbox="allow-scripts allow-same-origin allow-popups"
+            referrerpolicy="no-referrer-when-downgrade"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture"
+            onload="this.style.opacity='1';"
+            onerror="this.style.display='none'; this.parentElement.innerHTML += '<p>Failed to load advertisement content</p>';"
+            style="opacity: 0; transition: opacity 0.3s;">
         </iframe>
     </div>
     <div class="button-group">
@@ -20,4 +26,19 @@
         <a href="{{ url_for('index') }}" class="button secondary" data-translate="back">Back to Home</a>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Handle iframe loading errors
+    const adFrame = document.querySelector('.ad-frame');
+    if (adFrame) {
+        adFrame.addEventListener('error', function() {
+            this.style.display = 'none';
+            this.parentElement.innerHTML += '<p class="text-danger">Failed to load advertisement content</p>';
+        });
+    }
+});
+</script>
 {% endblock %}
