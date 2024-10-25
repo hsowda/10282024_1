@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div id="welcome-section" class="card">
+    <h1 class="title">Welcome to Adbay ♣</h1>
+    <p class="subtitle" data-translate="welcome">Watch ads, answer questions, and earn rewards!</p>
+    <div class="form-group">
+        <label for="language" class="label" data-translate="select_language">Select Language:</label>
+        <select id="language" class="input">
+            <option value="en" selected>English</option>
+            <option value="es">Español</option>
+            <option value="fr">Français</option>
+        </select>
+    </div>
+    <div class="button-group">
+        <button class="button primary" onclick="toggleSections('signup')" data-translate="signup">Sign Up</button>
+    </div>
+    <a href="https://temeculahills-hds.w3spaces.com/" class="button secondary">Created by Hunter Sowda | About Me</a>
+</div>
+
+<div id="signup-section" class="card hidden">
+    <h1 class="title" data-translate="signup_title">Sign Up for Adbay</h1>
+    <form action="{{ url_for('signup') }}" method="POST" id="signup-form">
+        <div class="form-group">
+            <label for="username" class="label" data-translate="username">Username</label>
+            <input type="text" id="username" required class="input" name="username">
+        </div>
+        <div class="form-group">
+            <label for="email" class="label" data-translate="email">Email</label>
+            <input type="email" id="email" required class="input" name="email">
+        </div>
+        <div class="form-group">
+            <label for="password" class="label" data-translate="password">Password</label>
+            <input type="password" id="password" required class="input" name="password">
+        </div>
+        <div class="form-group">
+            <label for="confirmPassword" class="label" data-translate="confirm_password">Confirm Password</label>
+            <input type="password" id="confirmPassword" required class="input" name="confirmPassword">
+        </div>
+        <button type="submit" class="button primary" data-translate="signup">Sign Up</button>
+    </form>
+    <div class="button-group">
+        <button class="button secondary" onclick="toggleSections('welcome')" data-translate="back">Back to Home</button>
+    </div>
+</div>
+{% endblock %}
