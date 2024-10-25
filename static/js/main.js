@@ -4,8 +4,10 @@ let translations = {};
 
 async function loadTranslations(lang) {
     try {
+        console.log('Loading translations for language:', lang);
         const response = await fetch(`/get_translation/${lang}`);
         translations = await response.json();
+        console.log('Loaded translations:', translations);
         updatePageTranslations();
     } catch (error) {
         console.error('Error loading translations:', error);
@@ -13,10 +15,20 @@ async function loadTranslations(lang) {
 }
 
 function updatePageTranslations() {
+    console.log('Updating page translations...');
     document.querySelectorAll('[data-translate]').forEach(element => {
         const key = element.getAttribute('data-translate');
+        console.log('Translating element:', element, 'with key:', key);
         if (translations[key]) {
-            element.textContent = translations[key];
+            if (element.tagName.toLowerCase() === 'a') {
+                // For anchor tags, update text content
+                element.textContent = translations[key];
+            } else {
+                element.textContent = translations[key];
+            }
+            console.log('Translation applied:', translations[key]);
+        } else {
+            console.warn('Missing translation for key:', key);
         }
     });
 }
@@ -37,16 +49,19 @@ function toggleSections(section) {
 
 // Form validation
 document.addEventListener('DOMContentLoaded', function() {
+    console.log('DOM Content Loaded');
     const signupForm = document.getElementById('signup-form');
     const languageSelect = document.getElementById('language');
     
     // Language change handler
     languageSelect.addEventListener('change', (e) => {
+        console.log('Language changed to:', e.target.value);
         currentLanguage = e.target.value;
         loadTranslations(currentLanguage);
     });
     
     // Initial translation load
+    console.log('Loading initial translations');
     loadTranslations(currentLanguage);
     
     if (signupForm) {
