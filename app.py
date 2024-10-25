@@ -3,7 +3,7 @@ from flask import Flask, render_template, request, jsonify, flash, redirect, url
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 from werkzeug.security import generate_password_hash, check_password_hash
-from flask_login import LoginManager, login_user, login_required, logout_user, current_user
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user, UserMixin
 import json
 
 class Base(DeclarativeBase):
@@ -47,8 +47,8 @@ def login():
         return redirect(url_for('index'))
         
     if request.method == 'POST':
-        email = request.form.get('email')
-        password = request.form.get('password')
+        email = request.form['email']
+        password = request.form['password']
         user = User.query.filter_by(email=email).first()
         
         if user and check_password_hash(user.password_hash, password):
@@ -60,7 +60,7 @@ def login():
             
     return render_template('login.html')
 
-@app.route('/logout')
+@app.route('/logout', methods=['POST'])
 @login_required
 def logout():
     logout_user()
@@ -71,9 +71,9 @@ def logout():
 def signup():
     from models import User
     
-    username = request.form.get('username')
-    email = request.form.get('email')
-    password = request.form.get('password')
+    username = request.form['username']
+    email = request.form['email']
+    password = request.form['password']
     
     if not all([username, email, password]):
         flash('All fields are required')

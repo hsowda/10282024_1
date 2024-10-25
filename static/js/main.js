@@ -20,8 +20,7 @@ function updatePageTranslations() {
         const key = element.getAttribute('data-translate');
         console.log('Translating element:', element, 'with key:', key);
         if (translations[key]) {
-            if (element.tagName.toLowerCase() === 'a') {
-                // For anchor tags, update text content
+            if (element.tagName.toLowerCase() === 'a' || element.tagName.toLowerCase() === 'button') {
                 element.textContent = translations[key];
             } else {
                 element.textContent = translations[key];
@@ -47,10 +46,11 @@ function toggleSections(section) {
     }
 }
 
-// Form validation
+// Form validation and submission
 document.addEventListener('DOMContentLoaded', function() {
     console.log('DOM Content Loaded');
     const signupForm = document.getElementById('signup-form');
+    const loginForm = document.getElementById('login-form');
     const languageSelect = document.getElementById('language');
     
     // Language change handler
@@ -64,6 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
     console.log('Loading initial translations');
     loadTranslations(currentLanguage);
     
+    // Signup form validation
     if (signupForm) {
         signupForm.addEventListener('submit', function(e) {
             const password = document.getElementById('password').value;
@@ -78,6 +79,20 @@ document.addEventListener('DOMContentLoaded', function() {
             if (password.length < 8) {
                 e.preventDefault();
                 alert('Password must be at least 8 characters long!');
+                return false;
+            }
+        });
+    }
+
+    // Login form validation
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            
+            if (!email || !password) {
+                e.preventDefault();
+                alert('Please fill in all fields!');
                 return false;
             }
         });
