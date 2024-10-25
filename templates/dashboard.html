@@ -4,13 +4,14 @@
 <div class="card">
     <h1 class="title">Welcome {{ current_user.username }}!</h1>
     <div class="ad-container">
-        <object 
-            data='https://afflicted.w3spaces.com' 
-            class='ad-frame'>
-            <embed 
-                src='https://afflicted.w3spaces.com' 
-                class='ad-frame'>
-        </object>
+        <iframe 
+            src="https://adbay-app-hsowda.replit.app/ad/1?embed=true" 
+            class="ad-frame"
+            width="600" 
+            height="400"
+            frameborder="0"
+            allowfullscreen>
+        </iframe>
     </div>
     <div class="button-group">
         <form action="{{ url_for('logout') }}" method="POST" style="display: inline;">
