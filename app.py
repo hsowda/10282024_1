@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, jsonify, flash, redirect, url_for, make_response
+from flask import Flask, render_template, request, jsonify, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -45,13 +45,7 @@ def index():
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    response = make_response(render_template('dashboard.html'))
-    # Add security headers
-    response.headers['Content-Security-Policy'] = "frame-src https://adbay-app-hsowda.replit.app; frame-ancestors 'self'; default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline';"
-    response.headers['X-Frame-Options'] = 'SAMEORIGIN'
-    response.headers['X-Content-Type-Options'] = 'nosniff'
-    response.headers['Referrer-Policy'] = 'strict-origin-when-cross-origin'
-    return response
+    return render_template('dashboard.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
