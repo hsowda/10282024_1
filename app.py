@@ -38,13 +38,20 @@ for lang in ['en', 'es', 'fr']:
 
 @app.route('/')
 def index():
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
     return render_template('index.html')
+
+@app.route('/dashboard')
+@login_required
+def dashboard():
+    return render_template('dashboard.html')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     from models import User
     if current_user.is_authenticated:
-        return redirect(url_for('index'))
+        return redirect(url_for('dashboard'))
         
     if request.method == 'POST':
         email = request.form['email']
@@ -54,7 +61,7 @@ def login():
         if user and check_password_hash(user.password_hash, password):
             login_user(user)
             flash('Logged in successfully.')
-            return redirect(url_for('index'))
+            return redirect(url_for('dashboard'))
         else:
             flash('Invalid email or password.')
             
@@ -100,6 +107,7 @@ def signup():
         db.session.commit()
         login_user(user)  # Automatically log in the user after signup
         flash('Registration successful!')
+        return redirect(url_for('dashboard'))
     except Exception as e:
         db.session.rollback()
         flash('An error occurred. Please try again.')
