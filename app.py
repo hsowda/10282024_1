@@ -2,7 +2,8 @@ import os
 from flask import Flask, render_template, request, jsonify, flash, redirect, url_for
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
-from werkzeug.security import generate_password_hash
+from werkzeug.security import generate_password_hash, check_password_hash
+from flask_login import LoginManager, login_user, login_required, logout_user, current_user
 import json
 
 class Base(DeclarativeBase):
@@ -10,6 +11,9 @@ class Base(DeclarativeBase):
 
 db = SQLAlchemy(model_class=Base)
 app = Flask(__name__)
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = 'login'
 
 # Configuration
 app.secret_key = os.environ.get("FLASK_SECRET_KEY") or "dev_key_123"
@@ -21,6 +25,11 @@ app.config["SQLALCHEMY_ENGINE_OPTIONS"] = {
 
 db.init_app(app)
 
+@login_manager.user_loader
+def load_user(user_id):
+    from models import User
+    return User.query.get(int(user_id))
+
 # Load translations
 translations = {}
 for lang in ['en', 'es', 'fr']:
@@ -30,6 +39,33 @@ for lang in ['en', 'es', 'fr']:
 @app.route('/')
 def index():
     return render_template('index.html')
+
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    from models import User
+    if current_user.is_authenticated:
+        return redirect(url_for('index'))
+        
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        user = User.query.filter_by(email=email).first()
+        
+        if user and check_password_hash(user.password_hash, password):
+            login_user(user)
+            flash('Logged in successfully.')
+            return redirect(url_for('index'))
+        else:
+            flash('Invalid email or password.')
+            
+    return render_template('login.html')
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    flash('You have been logged out.')
+    return redirect(url_for('index'))
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -62,6 +98,7 @@ def signup():
     db.session.add(user)
     try:
         db.session.commit()
+        login_user(user)  # Automatically log in the user after signup
         flash('Registration successful!')
     except Exception as e:
         db.session.rollback()
