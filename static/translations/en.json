@@ -7,5 +7,6 @@
     "email": "Email",
     "password": "Password",
     "confirm_password": "Confirm Password",
-    "back": "Back to Home"
+    "back": "Back to Home",
+    "created_by": "Created by Hunter Sowda | About Me"
 }
