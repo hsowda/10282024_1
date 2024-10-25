@@ -11,5 +11,7 @@
     "confirm_password": "Confirm Password",
     "back": "Back to Home",
     "created_by": "Created by Hunter Sowda | About Me",
-    "logout": "Logout"
+    "logout": "Logout",
+    "watch_now": "Watch Now",
+    "watch_trending": "Trending"
 }

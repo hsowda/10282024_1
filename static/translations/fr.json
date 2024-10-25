@@ -11,5 +11,7 @@
     "confirm_password": "Confirmer le mot de passe",
     "back": "Retour à l'accueil",
     "created_by": "Créé par Hunter Sowda | À propos de moi",
-    "logout": "Déconnexion"
+    "logout": "Déconnexion",
+    "watch_now": "Regarder maintenant",
+    "watch_trending": "Tendances"
 }
