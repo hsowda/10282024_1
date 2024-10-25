@@ -3,12 +3,29 @@
 {% block content %}
 <div class="card">
     <h1 class="title">Welcome {{ current_user.username }}!</h1>
+    <div class="ad-container">
+        <iframe 
+            src="https://beautifuldisaster-311.w3spaces.com" 
+            width="600" 
+            height="400"
+            frameborder="0"
+            allowfullscreen
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            style="border: none; width: 100%; height: 400px;">
+        </iframe>
+    </div>
     <div class="button-group">
-        <button class="watch-now-button" data-translate="watch_now" data-title="Featured Content" data-src="https://afflicted.w3spaces.com">
+        <button class="watch-now-button" 
+                data-translate="watch_now" 
+                data-title="Featured Content" 
+                data-src="https://afflicted.w3spaces.com">
             Watch Now
         </button>
-        <button class="watch-now-button" data-translate="watch_now" data-title="Featured Content" data-src="https://afflicted.w3spaces.com">
-            Watch Now
+        <button class="watch-now-button" 
+                data-translate="watch_trending" 
+                data-title="Trending Content" 
+                data-src="https://beautifuldisaster-311.w3spaces.com">
+            Trending
         </button>
         <form action="{{ url_for('logout') }}" method="POST" style="display: inline;">
             <button type="submit" class="button primary" data-translate="logout">Logout</button>
