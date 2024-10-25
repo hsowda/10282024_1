@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="/_next/static/css/app/layout.css?v=1729825737560" data-precedence="next_static/css/app/layout.css">
+    <link rel="preload" as="script" fetchpriority="low" href="/_next/static/chunks/webpack.js?v=1729825737560">
+    <script src="/_next/static/chunks/main-app.js?v=1729825737560" async></script>
+    <script src="/_next/static/chunks/app-pages-internals.js" async></script>
+    <script src="/_next/static/chunks/app/page.js" async></script>
+    <script src="/_next/static/chunks/polyfills.js" nomodule></script>
+</head>
+<body>
+    <div class="min-h-screen bg-gray-100">
+        <main class="container mx-auto p-4">
+            <!-- Welcome Page Section -->
+            <div id="welcome-section" class="bg-white p-6 rounded-lg shadow-md">
+                <h1 class="text-3xl font-bold mb-4">Welcome to Adbay ♣</h1>
+                <p class="mb-4">Watch ads, answer questions, and earn rewards!</p>
+                <div class="mb-4">
+                    <label for="language" class="block mb-2">Select Language:</label>
+                    <select id="language" class="w-full p-2 border rounded">
+                        <option value="en" selected>English</option>
+                        <option value="es">Español</option>
+                        <option value="fr">Français</option>
+                    </select>
+                </div>
+                <div class="mt-6">
+                    <a class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" href="#signup-section" onclick="toggleSections('signup')">Sign Up</a>
+                </div>
+                <a class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" href="https://temeculahills-hds.w3spaces.com/">Created by Hunter Sowda  |  About Me</a>
+            </div>
+
+            <!-- Sign-Up Section -->
+            <div id="signup-section" class="bg-white p-6 rounded-lg shadow-md hidden">
+                <h1 class="text-3xl font-bold mb-4">Sign Up for Adbay</h1>
+                <form>
+                    <div class="mb-4">
+                        <label for="username" class="block mb-2">Username</label>
+                        <input type="text" id="username" required class="w-full p-2 border rounded" name="username">
+                    </div>
+                    <div class="mb-4">
+                        <label for="email" class="block mb-2">Email</label>
+                        <input type="email" id="email" required class="w-full p-2 border rounded" name="email">
+                    </div>
+                    <div class="mb-4">
+                        <label for="password" class="block mb-2">Password</label>
+                        <input type="password" id="password" required class="w-full p-2 border rounded" name="password">
+                    </div>
+                    <div class="mb-4">
+                        <label for="confirmPassword" class="block mb-2">Confirm Password</label>
+                        <input type="password" id="confirmPassword" required class="w-full p-2 border rounded" name="confirmPassword">
+                    </div>
+                    <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Sign Up</button>
+                </form>
+                <div class="mt-4">
+                    <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onclick="window.location.href='https://hdsoda.github.io/HunterSowda-HTML/'">
+                        Back to Home
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        function toggleSections(section) {
+            document.getElementById('welcome-section').classList.toggle('hidden', section === 'signup');
+            document.getElementById('signup-section').classList.toggle('hidden', section !== 'signup');
+        }
+    </script>
+</body>
+</html>
