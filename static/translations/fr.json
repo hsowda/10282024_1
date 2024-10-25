@@ -10,5 +10,6 @@
     "password": "Mot de passe",
     "confirm_password": "Confirmer le mot de passe",
     "back": "Retour à l'accueil",
-    "created_by": "Créé par Hunter Sowda | À propos de moi"
+    "created_by": "Créé par Hunter Sowda | À propos de moi",
+    "logout": "Déconnexion"
 }
