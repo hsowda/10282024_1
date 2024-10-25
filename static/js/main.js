@@ -75,25 +75,6 @@ function createModal(title, iframeSrc) {
                 modal.remove();
             }
         };
-
-        // Send style information to the iframe once it's loaded
-        const iframe = modal.querySelector('iframe');
-        if (iframe) {
-            iframe.onload = () => {
-                try {
-                    iframe.contentWindow.postMessage({
-                        type: 'STYLE_CONFIG',
-                        styles: {
-                            buttonColor: '#3b82f6',
-                            buttonHoverColor: '#2563eb',
-                            buttonClass: 'watch-now-button'
-                        }
-                    }, '*');
-                } catch (error) {
-                    console.error('Error sending styles to iframe:', error);
-                }
-            };
-        }
     } catch (error) {
         console.error('Error creating modal:', error);
     }
@@ -116,31 +97,6 @@ function initializeWatchNowButtons() {
         });
     } catch (error) {
         console.error('Error initializing watch buttons:', error);
-    }
-}
-
-// Handle messages from iframes
-function handleIframeMessages() {
-    try {
-        window.addEventListener('message', (event) => {
-            // Verify the origin of the message
-            const allowedOrigins = [
-                'https://beautifuldisaster-311.w3spaces.com',
-                'https://afflicted.w3spaces.com'
-            ];
-            
-            if (!allowedOrigins.includes(event.origin)) {
-                console.warn('Received message from unauthorized origin:', event.origin);
-                return;
-            }
-
-            const data = event.data;
-            if (data.type === 'OPEN_MODAL') {
-                createModal(data.title || 'Watch Now', data.url);
-            }
-        }, false);
-    } catch (error) {
-        console.error('Error setting up iframe message handler:', error);
     }
 }
 
@@ -237,5 +193,4 @@ document.addEventListener('DOMContentLoaded', function() {
     initializeSignupForm();
     initializeLoginForm();
     initializeWatchNowButtons();
-    handleIframeMessages(); // Initialize iframe message handler
 });
