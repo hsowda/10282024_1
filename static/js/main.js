@@ -31,7 +31,6 @@ function toggleSections(section) {
     const signupSection = document.getElementById('signup-section');
     
     if (!welcomeSection || !signupSection) {
-        console.warn('Required sections not found in the DOM');
         return;
     }
 
@@ -39,12 +38,61 @@ function toggleSections(section) {
     signupSection.classList.toggle('hidden', section !== 'signup');
 }
 
+// Modal handling
+function createModal(title, iframeSrc) {
+    const modal = document.createElement('div');
+    modal.className = 'modal';
+    modal.innerHTML = `
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>${title}</h2>
+                <button class="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <iframe 
+                    src="${iframeSrc}"
+                    width="600"
+                    height="400"
+                    frameborder="0"
+                    allowfullscreen
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    style="border: none; width: 100%; height: 400px;">
+                </iframe>
+            </div>
+        </div>
+    `;
+
+    document.body.appendChild(modal);
+
+    const closeButton = modal.querySelector('.modal-close');
+    closeButton.onclick = () => {
+        modal.remove();
+    };
+
+    window.onclick = (event) => {
+        if (event.target === modal) {
+            modal.remove();
+        }
+    };
+}
+
+// Initialize watch now buttons
+function initializeWatchNowButtons() {
+    const watchButtons = document.querySelectorAll('.watch-now-button');
+    watchButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const title = button.getAttribute('data-title') || 'Watch Now';
+            const iframeSrc = button.getAttribute('data-src') || 'https://beautifuldisaster-311.w3spaces.com';
+            createModal(title, iframeSrc);
+        });
+    });
+}
+
 // Initialize language selector
 function initializeLanguageSelector() {
     const languageSelect = document.getElementById('language');
     if (!languageSelect) {
-        console.warn('Language selector not found');
-        return;
+        return; // Silently return if language selector doesn't exist on this page
     }
 
     // Remove any existing listeners before adding a new one
@@ -67,7 +115,6 @@ function initializeSignupForm() {
         return;
     }
 
-    // Remove any existing listeners before adding a new one
     const newForm = signupForm.cloneNode(true);
     signupForm.parentNode.replaceChild(newForm, signupForm);
     
@@ -111,7 +158,6 @@ function initializeLoginForm() {
         return;
     }
 
-    // Remove any existing listeners before adding a new one
     const newForm = loginForm.cloneNode(true);
     loginForm.parentNode.replaceChild(newForm, loginForm);
     
@@ -135,7 +181,9 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     initialized = true;
     
+    // Initialize all components
     initializeLanguageSelector();
     initializeSignupForm();
     initializeLoginForm();
+    initializeWatchNowButtons();
 });
