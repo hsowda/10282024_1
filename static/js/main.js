@@ -11,7 +11,8 @@ async function loadTranslations(lang) {
         translations = await response.json();
         updatePageTranslations();
     } catch (error) {
-        return; // Silently handle all errors
+        // Silently handle network or parsing errors
+        return;
     }
 }
 
@@ -20,7 +21,11 @@ function updatePageTranslations() {
     elements.forEach(element => {
         const key = element.getAttribute('data-translate');
         if (translations[key]) {
-            element.textContent = translations[key];
+            if (element.tagName.toLowerCase() === 'input' && element.type === 'submit') {
+                element.value = translations[key];
+            } else {
+                element.textContent = translations[key];
+            }
         }
     });
 }
@@ -66,9 +71,7 @@ function createModal(title, iframeSrc) {
         document.body.appendChild(modal);
 
         const closeButton = modal.querySelector('.modal-close');
-        if (closeButton) {
-            closeButton.onclick = () => modal.remove();
-        }
+        closeButton?.addEventListener('click', () => modal.remove());
 
         window.onclick = (event) => {
             if (event.target === modal) {
@@ -76,7 +79,8 @@ function createModal(title, iframeSrc) {
             }
         };
     } catch (error) {
-        return; // Silently handle modal errors
+        // Silently handle modal creation errors
+        return;
     }
 }
 
@@ -94,30 +98,35 @@ function initializeWatchNowButtons() {
     });
 }
 
-// Silent language selector initialization
+// Language selector initialization with improved handling
 function initializeLanguageSelector() {
-    // Get stored language preference from localStorage or default to 'en'
-    currentLanguage = localStorage.getItem('preferred_language') || 'en';
-    
-    // Load translations regardless of selector presence
-    loadTranslations(currentLanguage);
-    
-    // Try to initialize language selector if present
-    const languageSelect = document.getElementById('language');
-    if (languageSelect) {
-        languageSelect.value = currentLanguage;
-        languageSelect.addEventListener('change', (e) => {
-            currentLanguage = e.target.value;
-            localStorage.setItem('preferred_language', currentLanguage);
-            loadTranslations(currentLanguage);
-        });
+    try {
+        // Get stored language preference or default to 'en'
+        currentLanguage = localStorage.getItem('preferred_language') || 'en';
+        
+        // Load translations immediately for the current language
+        loadTranslations(currentLanguage);
+        
+        // Initialize language selector only if it exists
+        const languageSelect = document.getElementById('language');
+        if (languageSelect) {
+            languageSelect.value = currentLanguage;
+            languageSelect.addEventListener('change', (e) => {
+                currentLanguage = e.target.value;
+                localStorage.setItem('preferred_language', currentLanguage);
+                loadTranslations(currentLanguage);
+            });
+        }
+    } catch (error) {
+        // Ensure translations are loaded even if selector initialization fails
+        loadTranslations(currentLanguage);
     }
 }
 
 // Initialize signup form
 function initializeSignupForm() {
     const signupForm = document.getElementById('signup-form');
-    if (!signupForm) return; // Silently return if form doesn't exist
+    if (!signupForm) return;
     
     signupForm.addEventListener('submit', function(e) {
         const passwordInput = document.getElementById('password');
@@ -151,7 +160,7 @@ function initializeSignupForm() {
 // Initialize login form
 function initializeLoginForm() {
     const loginForm = document.querySelector('form[action*="login"]');
-    if (!loginForm) return; // Silently return if form doesn't exist
+    if (!loginForm) return;
     
     loginForm.addEventListener('submit', function(e) {
         const emailInput = document.getElementById('email');
@@ -165,10 +174,10 @@ function initializeLoginForm() {
     });
 }
 
-// Main initialization with error handling
+// Main initialization
 document.addEventListener('DOMContentLoaded', function() {
     try {
-        // Initialize core functionality
+        // Initialize core functionality first
         initializeLanguageSelector();
         
         // Initialize optional components
@@ -176,6 +185,7 @@ document.addEventListener('DOMContentLoaded', function() {
         initializeLoginForm();
         initializeWatchNowButtons();
     } catch (error) {
-        return; // Silently handle any initialization errors
+        // Ensure basic translation functionality works even if other initializations fail
+        loadTranslations(currentLanguage);
     }
 });
