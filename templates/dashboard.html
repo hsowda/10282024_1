@@ -21,12 +21,12 @@
                 data-src="https://afflicted.w3spaces.com">
             Watch Now
         </button>
-        <button class="watch-now-button" 
-                data-translate="watch_trending" 
-                data-title="Trending Content" 
-                data-src="https://beautifuldisaster-311.w3spaces.com">
+        <a href="https://beautifuldisaster-311.w3spaces.com" 
+           class="watch-now-button" 
+           data-translate="watch_trending"
+           target="_blank">
             Trending
-        </button>
+        </a>
         <form action="{{ url_for('logout') }}" method="POST" style="display: inline;">
             <button type="submit" class="button primary" data-translate="logout">Logout</button>
         </form>
