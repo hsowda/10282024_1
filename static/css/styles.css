@@ -153,37 +153,3 @@
 .navbar-light .navbar-nav .nav-link:hover {
     color: var(--primary-color);
 }
-
-/* Landing page styles */
-.landing-container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
-}
-
-.iframe-container {
-    margin-bottom: 30px;
-    border-radius: 8px;
-    overflow: hidden;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.cta-container {
-    text-align: center;
-}
-
-.cta-button {
-    display: inline-block;
-    padding: 15px 30px;
-    background: var(--primary-color);
-    color: white;
-    text-decoration: none;
-    border-radius: 4px;
-    font-size: 18px;
-    transition: background-color 0.3s;
-}
-
-.cta-button:hover {
-    background: var(--primary-hover);
-    color: white;
-}

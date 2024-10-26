@@ -13,7 +13,7 @@ db = SQLAlchemy(model_class=Base)
 app = Flask(__name__)
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'auth'
+login_manager.login_view = 'index'
 login_manager.login_message = 'Please log in to access this page.'
 
 # Configuration
@@ -39,10 +39,6 @@ for lang in ['en', 'es', 'fr']:
 
 @app.route('/')
 def index():
-    return render_template('landing.html')
-
-@app.route('/auth')
-def auth():
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
     return render_template('auth.html')
@@ -71,9 +67,9 @@ def login():
             return redirect(next_page)
         else:
             flash('Invalid email or password.')
-            return redirect(url_for('auth'))
+            return redirect(url_for('index'))
             
-    return redirect(url_for('auth'))
+    return redirect(url_for('index'))
 
 @app.route('/logout')
 @login_required
@@ -94,16 +90,16 @@ def signup():
     
     if not all([username, email, password]):
         flash('All fields are required')
-        return redirect(url_for('auth'))
+        return redirect(url_for('index'))
     
     # Check if user exists
     if User.query.filter_by(username=username).first():
         flash('Username already exists')
-        return redirect(url_for('auth'))
+        return redirect(url_for('index'))
     
     if User.query.filter_by(email=email).first():
         flash('Email already registered')
-        return redirect(url_for('auth'))
+        return redirect(url_for('index'))
     
     # Create new user
     user = User(
@@ -121,7 +117,7 @@ def signup():
         db.session.rollback()
         flash('An error occurred. Please try again.')
         
-    return redirect(url_for('auth'))
+    return redirect(url_for('index'))
 
 @app.route('/get_translation/<lang>')
 def get_translation(lang):
