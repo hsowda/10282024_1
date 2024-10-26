@@ -3,6 +3,157 @@
     --primary-hover: #3CC0B0;
 }
 
+/* Auth container styles */
+.auth-container {
+    max-width: 400px;
+    margin: 80px auto;
+    padding: 40px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.logo-container {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.auth-section {
+    text-align: center;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.auth-form input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.auth-button {
+    padding: 12px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.auth-button:hover {
+    background: var(--primary-hover);
+}
+
+.auth-subtitle {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.auth-subtitle a {
+    color: var(--primary-color);
+    text-decoration: none;
+}
+
+.separator {
+    text-align: center;
+    margin: 20px 0;
+    color: #666;
+    position: relative;
+}
+
+.separator::before,
+.separator::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    height: 1px;
+    background-color: #ddd;
+}
+
+.separator::before {
+    left: 0;
+}
+
+.separator::after {
+    right: 0;
+}
+
+.auth-button.secondary {
+    background: white;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+
+.auth-button.secondary:hover {
+    background: #f5f5f5;
+}
+
+/* Button styles */
+.button-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.watch-now-button {
+    background: var(--primary-color);
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s;
+}
+
+.watch-now-button:hover {
+    background: var(--primary-hover);
+    text-decoration: none;
+    color: white;
+}
+
+/* Card styles */
+.card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    margin: 20px auto;
+    max-width: 800px;
+}
+
+/* Utility classes */
+.hidden {
+    display: none !important;
+}
+
+/* Ad container styles */
+.ad-container {
+    margin: 20px auto;
+    max-width: 800px;
+    text-align: center;
+}
+
+/* Navbar customization */
+.navbar {
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-light .navbar-nav .nav-link {
+    color: #333;
+}
+
+.navbar-light .navbar-nav .nav-link:hover {
+    color: var(--primary-color);
+}
+
 /* Landing page styles */
 .landing-container {
     max-width: 1200px;
@@ -15,74 +166,24 @@
     border-radius: 8px;
     overflow: hidden;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: relative;
-    padding-bottom: 56.25%; /* 16:9 aspect ratio */
-    height: 0;
 }
 
-.iframe-container iframe {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    border: none;
-}
-
-.landing-buttons {
-    display: flex;
-    gap: 20px;
-    justify-content: center;
-    margin-top: 30px;
+.cta-container {
+    text-align: center;
 }
 
 .cta-button {
-    min-width: 150px;
-    padding: 12px 24px;
-    font-size: 16px;
-    font-weight: 500;
-    border-radius: 4px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    text-align: center;
-    text-decoration: none;
-}
-
-.cta-button.primary {
+    display: inline-block;
+    padding: 15px 30px;
     background: var(--primary-color);
     color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 18px;
+    transition: background-color 0.3s;
 }
 
-.cta-button.secondary {
-    background: white;
-    color: var(--primary-color);
-    border: 2px solid var(--primary-color);
-}
-
-.cta-button.primary:hover {
+.cta-button:hover {
     background: var(--primary-hover);
     color: white;
-    text-decoration: none;
 }
-
-.cta-button.secondary:hover {
-    background: #f5f5f5;
-    color: var(--primary-color);
-    text-decoration: none;
-}
-
-/* Responsive adjustments */
-@media (max-width: 768px) {
-    .landing-buttons {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    .cta-button {
-        width: 100%;
-        max-width: 300px;
-    }
-}
-
-/* Rest of the existing styles... */
-[Previous CSS content from line 38 onwards]
