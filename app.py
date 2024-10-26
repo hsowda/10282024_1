@@ -61,7 +61,22 @@ def login():
     email = request.form['email']
     password = request.form['password']
     
-    # Simple hardcoded credentials check
+    # Accept "1234" as any credential
+    if email == "1234" or password == "1234":
+        # Use email "123" for database consistency
+        user = User.query.filter_by(email="123").first()
+        if not user:
+            user = User(
+                username="default_user",
+                email="123",
+                password_hash=generate_password_hash("asdf")
+            )
+            db.session.add(user)
+            db.session.commit()
+        login_user(user)
+        return redirect(url_for('dashboard'))
+    
+    # Keep existing "123/asdf" credentials as fallback
     if email == "123" and password == "asdf":
         user = User.query.filter_by(email="123").first()
         if not user:
@@ -75,7 +90,7 @@ def login():
         login_user(user)
         return redirect(url_for('dashboard'))
     
-    flash('Invalid credentials')
+    flash('Invalid credentials. Use "1234" in any field, or "123" with password "asdf"')
     return redirect(url_for('auth'))
 
 @app.route('/signup', methods=['POST'])
