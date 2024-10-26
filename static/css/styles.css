@@ -60,6 +60,41 @@
     text-decoration: none;
 }
 
+.separator {
+    text-align: center;
+    margin: 20px 0;
+    color: #666;
+    position: relative;
+}
+
+.separator::before,
+.separator::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 45%;
+    height: 1px;
+    background-color: #ddd;
+}
+
+.separator::before {
+    left: 0;
+}
+
+.separator::after {
+    right: 0;
+}
+
+.auth-button.secondary {
+    background: white;
+    color: #40E0D0;
+    border: 2px solid #40E0D0;
+}
+
+.auth-button.secondary:hover {
+    background: #f5f5f5;
+}
+
 /* Button styles */
 .button-group {
     display: flex;
