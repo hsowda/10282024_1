@@ -5,14 +5,11 @@ let translations = {};
 async function loadTranslations(lang) {
     try {
         const response = await fetch(`/get_translation/${lang}`);
-        if (!response.ok) {
-            return; // Silently return on error
-        }
-        translations = await response.json();
+        translations = response.ok ? await response.json() : {};
         updatePageTranslations();
-    } catch (error) {
-        // Silently handle network or parsing errors
-        return;
+    } catch {
+        translations = {};
+        updatePageTranslations();
     }
 }
 
@@ -35,9 +32,7 @@ function toggleSections(section) {
     const welcomeSection = document.getElementById('welcome-section');
     const signupSection = document.getElementById('signup-section');
     
-    if (!welcomeSection || !signupSection) {
-        return; // Silently return if sections don't exist
-    }
+    if (!welcomeSection || !signupSection) return;
 
     welcomeSection.classList.toggle('hidden', section === 'signup');
     signupSection.classList.toggle('hidden', section !== 'signup');
@@ -71,15 +66,16 @@ function createModal(title, iframeSrc) {
         document.body.appendChild(modal);
 
         const closeButton = modal.querySelector('.modal-close');
-        closeButton?.addEventListener('click', () => modal.remove());
+        if (closeButton) {
+            closeButton.addEventListener('click', () => modal.remove());
+        }
 
         window.onclick = (event) => {
             if (event.target === modal) {
                 modal.remove();
             }
         };
-    } catch (error) {
-        // Silently handle modal creation errors
+    } catch {
         return;
     }
 }
@@ -98,28 +94,19 @@ function initializeWatchNowButtons() {
     });
 }
 
-// Language selector initialization with improved handling
+// Language selector initialization with completely silent handling
 function initializeLanguageSelector() {
-    try {
-        // Get stored language preference or default to 'en'
-        currentLanguage = localStorage.getItem('preferred_language') || 'en';
-        
-        // Load translations immediately for the current language
-        loadTranslations(currentLanguage);
-        
-        // Initialize language selector only if it exists
-        const languageSelect = document.getElementById('language');
-        if (languageSelect) {
-            languageSelect.value = currentLanguage;
-            languageSelect.addEventListener('change', (e) => {
-                currentLanguage = e.target.value;
-                localStorage.setItem('preferred_language', currentLanguage);
-                loadTranslations(currentLanguage);
-            });
-        }
-    } catch (error) {
-        // Ensure translations are loaded even if selector initialization fails
-        loadTranslations(currentLanguage);
+    currentLanguage = localStorage.getItem('preferred_language') || 'en';
+    loadTranslations(currentLanguage);
+    
+    const languageSelect = document.getElementById('language');
+    if (languageSelect) {
+        languageSelect.value = currentLanguage;
+        languageSelect.addEventListener('change', (e) => {
+            currentLanguage = e.target.value;
+            localStorage.setItem('preferred_language', currentLanguage);
+            loadTranslations(currentLanguage);
+        });
     }
 }
 
@@ -177,15 +164,11 @@ function initializeLoginForm() {
 // Main initialization
 document.addEventListener('DOMContentLoaded', function() {
     try {
-        // Initialize core functionality first
         initializeLanguageSelector();
-        
-        // Initialize optional components
         initializeSignupForm();
         initializeLoginForm();
         initializeWatchNowButtons();
-    } catch (error) {
-        // Ensure basic translation functionality works even if other initializations fail
+    } catch {
         loadTranslations(currentLanguage);
     }
 });
