@@ -6,7 +6,7 @@ async function loadTranslations(lang) {
     try {
         const response = await fetch(`/get_translation/${lang}`);
         if (!response.ok) {
-            return;
+            throw new Error('Failed to load translations');
         }
         translations = await response.json();
         updatePageTranslations();
@@ -34,20 +34,14 @@ function initializeLanguageHandling() {
     currentLanguage = localStorage.getItem('preferred_language') || 'en';
     loadTranslations(currentLanguage);
     
-    // Check if we're on a page that should have a language selector
-    const shouldHaveLanguageSelector = window.location.pathname === '/auth' || 
-                                     window.location.pathname === '/';
-    
     const languageSelect = document.getElementById('language');
-    if (languageSelect) {
+    if (languageSelect && window.location.pathname === '/auth') {
         languageSelect.value = currentLanguage;
         languageSelect.addEventListener('change', (e) => {
             currentLanguage = e.target.value;
             localStorage.setItem('preferred_language', currentLanguage);
             loadTranslations(currentLanguage);
         });
-    } else if (shouldHaveLanguageSelector) {
-        console.warn('Language selector not found on authentication page');
     }
 }
 
