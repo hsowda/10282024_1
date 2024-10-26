@@ -20,7 +20,7 @@
                 <h2 class="h3 mb-3" data-translate="login_title">Sign in to your account</h2>
                 <form action="{{ url_for('login') }}" method="POST" class="needs-validation" novalidate>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="loginEmail" name="email" placeholder="Email or username" required>
+                        <input type="email" class="form-control" id="loginEmail" name="email" placeholder="Email" required>
                         <label for="loginEmail" data-translate="email">Email</label>
                     </div>
                     <div class="form-floating mb-3">
@@ -43,20 +43,12 @@
                 <h2 class="h3 mb-3" data-translate="signup_title">Create your account</h2>
                 <form action="{{ url_for('signup') }}" method="POST" class="needs-validation" novalidate>
                     <div class="form-floating mb-3">
-                        <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
-                        <label for="username" data-translate="username">Username</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+                        <input type="email" class="form-control" id="email" name="email" placeholder="Email" required>
                         <label for="email" data-translate="email">Email</label>
                     </div>
                     <div class="form-floating mb-3">
                         <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
                         <label for="password" data-translate="password">Password</label>
-                    </div>
-                    <div class="form-floating mb-3">
-                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
-                        <label for="confirmPassword" data-translate="confirm_password">Confirm Password</label>
                     </div>
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary btn-lg" data-translate="signup">Sign Up</button>
