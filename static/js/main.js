@@ -35,7 +35,7 @@ function initializeLanguageHandling() {
     loadTranslations(currentLanguage);
     
     const languageSelect = document.getElementById('language');
-    if (languageSelect && window.location.pathname === '/auth') {
+    if (languageSelect) {
         languageSelect.value = currentLanguage;
         languageSelect.addEventListener('change', (e) => {
             currentLanguage = e.target.value;
