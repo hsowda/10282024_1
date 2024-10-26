@@ -6,13 +6,12 @@ async function loadTranslations(lang) {
     try {
         const response = await fetch(`/get_translation/${lang}`);
         if (!response.ok) {
-            throw new Error(`HTTP error! status: ${response.status}`);
+            return; // Silently return on error
         }
         translations = await response.json();
         updatePageTranslations();
     } catch (error) {
-        // Silently handle all errors to avoid console noise
-        return;
+        return; // Silently handle all errors
     }
 }
 
@@ -77,8 +76,7 @@ function createModal(title, iframeSrc) {
             }
         };
     } catch (error) {
-        // Silently handle modal errors
-        return;
+        return; // Silently handle modal errors
     }
 }
 
@@ -90,25 +88,21 @@ function initializeWatchNowButtons() {
             const title = button.getAttribute('data-title') || 'Watch Now';
             const iframeSrc = button.getAttribute('data-src');
             if (iframeSrc) {
-                if (title === 'Trending') {
-                    window.location.href = iframeSrc;
-                } else {
-                    createModal(title, iframeSrc);
-                }
+                createModal(title, iframeSrc);
             }
         });
     });
 }
 
-// Initialize language selector with improved silent handling
+// Silent language selector initialization
 function initializeLanguageSelector() {
-    // Get stored language preference from localStorage
+    // Get stored language preference from localStorage or default to 'en'
     currentLanguage = localStorage.getItem('preferred_language') || 'en';
     
-    // Always load translations for the current language
+    // Load translations regardless of selector presence
     loadTranslations(currentLanguage);
     
-    // Try to initialize language selector only if it exists
+    // Try to initialize language selector if present
     const languageSelect = document.getElementById('language');
     if (languageSelect) {
         languageSelect.value = currentLanguage;
@@ -131,7 +125,6 @@ function initializeSignupForm() {
         
         if (!passwordInput || !confirmPasswordInput) {
             e.preventDefault();
-            alert('Password fields not found!');
             return;
         }
         
@@ -172,15 +165,17 @@ function initializeLoginForm() {
     });
 }
 
-// Main initialization
+// Main initialization with error handling
 document.addEventListener('DOMContentLoaded', function() {
     try {
+        // Initialize core functionality
         initializeLanguageSelector();
+        
+        // Initialize optional components
         initializeSignupForm();
         initializeLoginForm();
         initializeWatchNowButtons();
     } catch (error) {
-        // Silently handle initialization errors
-        return;
+        return; // Silently handle any initialization errors
     }
 });
