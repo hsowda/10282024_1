@@ -94,12 +94,12 @@ function initializeWatchNowButtons() {
     });
 }
 
-// Silent language selector initialization
-function initializeLanguageSelector() {
+// Initialize language handling
+function initializeLanguageHandling() {
     // Get stored language preference from localStorage or default to 'en'
     currentLanguage = localStorage.getItem('preferred_language') || 'en';
     
-    // Load translations regardless of selector presence
+    // Load translations for the current language
     loadTranslations(currentLanguage);
     
     // Try to initialize language selector if present
@@ -165,17 +165,18 @@ function initializeLoginForm() {
     });
 }
 
-// Main initialization with error handling
+// Main initialization
 document.addEventListener('DOMContentLoaded', function() {
     try {
-        // Initialize core functionality
-        initializeLanguageSelector();
+        // Initialize language handling first
+        initializeLanguageHandling();
         
-        // Initialize optional components
+        // Initialize other components
         initializeSignupForm();
         initializeLoginForm();
         initializeWatchNowButtons();
     } catch (error) {
-        return; // Silently handle any initialization errors
+        // Silently handle initialization errors
+        return;
     }
 });
