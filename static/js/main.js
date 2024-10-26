@@ -11,7 +11,10 @@ async function loadTranslations(lang) {
         translations = await response.json();
         updatePageTranslations();
     } catch (error) {
-        console.error('Error loading translations:', error);
+        // Only log critical errors
+        if (!(error instanceof TypeError)) {
+            console.error('Error loading translations:', error);
+        }
     }
 }
 
@@ -38,7 +41,7 @@ function toggleSections(section) {
     signupSection.classList.toggle('hidden', section !== 'signup');
 }
 
-// Modal handling for Watch Now button only
+// Modal handling
 function createModal(title, iframeSrc) {
     try {
         const modal = document.createElement('div');
@@ -76,7 +79,9 @@ function createModal(title, iframeSrc) {
             }
         };
     } catch (error) {
-        console.error('Error creating modal:', error);
+        if (!(error instanceof TypeError)) {
+            console.error('Error creating modal:', error);
+        }
     }
 }
 
@@ -84,23 +89,22 @@ function createModal(title, iframeSrc) {
 function initializeWatchNowButtons() {
     const watchButtons = document.querySelectorAll('.watch-now-button[data-src]');
     watchButtons.forEach(button => {
-        if (!button.hasAttribute('href')) { // Only add click handler if it's not a direct link
-            button.addEventListener('click', () => {
-                const title = button.getAttribute('data-title') || 'Watch Now';
-                const iframeSrc = button.getAttribute('data-src');
-                if (iframeSrc) {
-                    createModal(title, iframeSrc);
-                }
-            });
-        }
+        button.addEventListener('click', () => {
+            const title = button.getAttribute('data-title') || 'Watch Now';
+            const iframeSrc = button.getAttribute('data-src');
+            if (iframeSrc) {
+                createModal(title, iframeSrc);
+            }
+        });
     });
 }
 
 // Initialize language selector
 function initializeLanguageSelector() {
-    // Always load default translations regardless of selector presence
+    // Always load default translations
     loadTranslations(currentLanguage);
     
+    // Try to get language selector if it exists
     const languageSelect = document.getElementById('language');
     if (languageSelect) {
         languageSelect.value = currentLanguage;
@@ -166,12 +170,14 @@ function initializeLoginForm() {
 // Main initialization
 document.addEventListener('DOMContentLoaded', function() {
     try {
-        // Initialize all components
         initializeLanguageSelector();
         initializeSignupForm();
         initializeLoginForm();
         initializeWatchNowButtons();
     } catch (error) {
-        console.error('Error during initialization:', error);
+        // Only log critical errors
+        if (!(error instanceof TypeError)) {
+            console.error('Error during initialization:', error);
+        }
     }
 });
