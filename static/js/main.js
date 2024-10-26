@@ -35,7 +35,7 @@ function initializeLanguageHandling() {
     loadTranslations(currentLanguage);
     
     const languageSelect = document.getElementById('language');
-    if (languageSelect && window.location.pathname === '/auth') {
+    if (languageSelect) {
         languageSelect.value = currentLanguage;
         languageSelect.addEventListener('change', (e) => {
             currentLanguage = e.target.value;
@@ -51,13 +51,6 @@ function initializeForms() {
     if (signupForm) {
         signupForm.addEventListener('submit', function(e) {
             const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword');
-            
-            if (confirmPassword && password !== confirmPassword.value) {
-                e.preventDefault();
-                alert('Passwords do not match!');
-                return;
-            }
             
             if (password.length < 8) {
                 e.preventDefault();
