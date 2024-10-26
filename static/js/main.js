@@ -102,20 +102,22 @@ function initializeWatchNowButtons() {
 // Initialize language selector
 function initializeLanguageSelector() {
     const languageSelect = document.getElementById('language');
-    // Silent return if language selector doesn't exist (e.g., on dashboard page)
-    if (!languageSelect) return;
     
-    // Set initial selected value based on current language
-    languageSelect.value = currentLanguage;
-    
-    // Initial translation load
+    // Load translations even if selector is not present
+    // This ensures translations work on all pages
     loadTranslations(currentLanguage);
     
-    // Add change event listener
-    languageSelect.addEventListener('change', (e) => {
-        currentLanguage = e.target.value;
-        loadTranslations(currentLanguage);
-    });
+    // Only set up language selector if it exists
+    if (languageSelect) {
+        // Set initial selected value based on current language
+        languageSelect.value = currentLanguage;
+        
+        // Add change event listener
+        languageSelect.addEventListener('change', (e) => {
+            currentLanguage = e.target.value;
+            loadTranslations(currentLanguage);
+        });
+    }
 }
 
 // Initialize signup form
