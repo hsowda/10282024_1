@@ -11,10 +11,8 @@ async function loadTranslations(lang) {
         translations = await response.json();
         updatePageTranslations();
     } catch (error) {
-        // Only log critical errors
-        if (!(error instanceof TypeError)) {
-            console.error('Error loading translations:', error);
-        }
+        // Silently handle translation loading errors
+        console.debug('Translation loading:', error);
     }
 }
 
@@ -34,7 +32,7 @@ function toggleSections(section) {
     const signupSection = document.getElementById('signup-section');
     
     if (!welcomeSection || !signupSection) {
-        return;
+        return; // Silently return if sections don't exist
     }
 
     welcomeSection.classList.toggle('hidden', section === 'signup');
@@ -79,9 +77,7 @@ function createModal(title, iframeSrc) {
             }
         };
     } catch (error) {
-        if (!(error instanceof TypeError)) {
-            console.error('Error creating modal:', error);
-        }
+        console.debug('Modal creation:', error);
     }
 }
 
@@ -101,10 +97,10 @@ function initializeWatchNowButtons() {
 
 // Initialize language selector
 function initializeLanguageSelector() {
-    // Always load default translations
+    // Always load translations for current language, regardless of selector presence
     loadTranslations(currentLanguage);
     
-    // Try to get language selector if it exists
+    // Try to initialize language selector if it exists
     const languageSelect = document.getElementById('language');
     if (languageSelect) {
         languageSelect.value = currentLanguage;
@@ -118,7 +114,7 @@ function initializeLanguageSelector() {
 // Initialize signup form
 function initializeSignupForm() {
     const signupForm = document.getElementById('signup-form');
-    if (!signupForm) return;
+    if (!signupForm) return; // Silently return if form doesn't exist
     
     signupForm.addEventListener('submit', function(e) {
         const passwordInput = document.getElementById('password');
@@ -153,7 +149,7 @@ function initializeSignupForm() {
 // Initialize login form
 function initializeLoginForm() {
     const loginForm = document.querySelector('form[action*="login"]');
-    if (!loginForm) return;
+    if (!loginForm) return; // Silently return if form doesn't exist
     
     loginForm.addEventListener('submit', function(e) {
         const emailInput = document.getElementById('email');
@@ -175,9 +171,7 @@ document.addEventListener('DOMContentLoaded', function() {
         initializeLoginForm();
         initializeWatchNowButtons();
     } catch (error) {
-        // Only log critical errors
-        if (!(error instanceof TypeError)) {
-            console.error('Error during initialization:', error);
-        }
+        // Only log initialization errors in debug mode
+        console.debug('Initialization:', error);
     }
 });
