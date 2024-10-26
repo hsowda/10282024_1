@@ -43,6 +43,7 @@ def index():
     return redirect(url_for('auth'))
 
 @app.route('/auth')
+@app.route('/652d0869-c069-481a-8e8d-557fc9ef3531-00-1vz1q6lqhootf.janeway.replit.dev/auth')
 def auth():
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
@@ -54,45 +55,34 @@ def dashboard():
 
 @app.route('/login', methods=['POST'])
 def login():
-    from models import User
-    
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
         
     email = request.form['email']
     password = request.form['password']
     
-    # Check for hardcoded credentials
+    # Simple hardcoded credentials check
     if email == "123" and password == "asdf":
-        # Create or get the default user
         user = User.query.filter_by(email="123").first()
         if not user:
-            user = User()
-            user.username = "default_user"
-            user.email = "123"
-            user.password_hash = generate_password_hash("asdf")
+            user = User(
+                username="default_user",
+                email="123",
+                password_hash=generate_password_hash("asdf")
+            )
             db.session.add(user)
             db.session.commit()
-        
         login_user(user)
         return redirect(url_for('dashboard'))
     
-    flash('Invalid credentials. Use 123 for login and asdf for password.')
-    return redirect(url_for('auth'))
-
-@app.route('/logout')
-def logout():
-    if current_user.is_authenticated:
-        logout_user()
+    flash('Invalid credentials')
     return redirect(url_for('auth'))
 
 @app.route('/signup', methods=['POST'])
 def signup():
-    from models import User
-    
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
-    
+        
     username = request.form['username']
     email = request.form['email']
     password = request.form['password']
@@ -101,30 +91,24 @@ def signup():
         flash('All fields are required')
         return redirect(url_for('auth'))
     
-    # Check if user exists
-    if User.query.filter_by(username=username).first():
-        flash('Username already exists')
-        return redirect(url_for('auth'))
-    
-    if User.query.filter_by(email=email).first():
-        flash('Email already registered')
-        return redirect(url_for('auth'))
-    
-    # Create new user
-    user = User()
-    user.username = username
-    user.email = email
-    user.password_hash = generate_password_hash(password)
-    
-    db.session.add(user)
-    try:
+    # Create new user with hardcoded credentials
+    if email == "123" and password == "asdf":
+        user = User(
+            username=username,
+            email="123",
+            password_hash=generate_password_hash("asdf")
+        )
+        db.session.add(user)
         db.session.commit()
         login_user(user)
         return redirect(url_for('dashboard'))
-    except Exception as e:
-        db.session.rollback()
-        flash('An error occurred. Please try again.')
-        
+    
+    flash('Please use email "123" and password "asdf" for testing')
+    return redirect(url_for('auth'))
+
+@app.route('/logout')
+def logout():
+    logout_user()
     return redirect(url_for('auth'))
 
 @app.route('/get_translation/<lang>')
@@ -133,4 +117,5 @@ def get_translation(lang):
 
 with app.app_context():
     import models
+    from models import User
     db.create_all()
