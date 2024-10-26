@@ -39,7 +39,7 @@ function toggleSections(section) {
     signupSection.classList.toggle('hidden', section !== 'signup');
 }
 
-// Modal handling
+// Modal handling for Watch Now button only
 function createModal(title, iframeSrc) {
     try {
         const modal = document.createElement('div');
@@ -81,19 +81,21 @@ function createModal(title, iframeSrc) {
     }
 }
 
-// Initialize watch now buttons
+// Initialize watch now buttons (only for modal-based buttons)
 function initializeWatchNowButtons() {
-    const watchButtons = document.querySelectorAll('.watch-now-button');
+    const watchButtons = document.querySelectorAll('.watch-now-button[data-src]');
     if (!watchButtons.length) return; // Silent return if no buttons found
 
     watchButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            const title = button.getAttribute('data-title') || 'Watch Now';
-            const iframeSrc = button.getAttribute('data-src');
-            if (iframeSrc) {
-                createModal(title, iframeSrc);
-            }
-        });
+        if (!button.hasAttribute('href')) { // Only add click handler if it's not a direct link
+            button.addEventListener('click', () => {
+                const title = button.getAttribute('data-title') || 'Watch Now';
+                const iframeSrc = button.getAttribute('data-src');
+                if (iframeSrc) {
+                    createModal(title, iframeSrc);
+                }
+            });
+        }
     });
 }
 
