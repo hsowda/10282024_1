@@ -14,6 +14,7 @@ app = Flask(__name__)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'login'
+login_manager.login_message = 'Please log in to access this page.'
 
 # Configuration
 app.secret_key = os.environ.get("FLASK_SECRET_KEY") or "dev_key_123"
@@ -60,7 +61,9 @@ def login():
         
         if user and check_password_hash(user.password_hash, password):
             login_user(user)
-            flash('Logged in successfully.')
+            next_page = request.args.get('next')
+            if next_page and next_page.startswith('/'):
+                return redirect(next_page)
             return redirect(url_for('dashboard'))
         else:
             flash('Invalid email or password.')
@@ -77,6 +80,9 @@ def logout():
 @app.route('/signup', methods=['POST'])
 def signup():
     from models import User
+    
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
     
     username = request.form['username']
     email = request.form['email']
