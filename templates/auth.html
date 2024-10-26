@@ -1,36 +1,72 @@
 {% extends "base.html" %}
 {% block content %}
-<div class="auth-container">
-    <div class="logo-container">
-        <h1>Adbay</h1>
-    </div>
-    
-    <!-- Login Form -->
-    <div id="login-section" class="auth-section">
-        <h2>Sign in to your account</h2>
-        <p class="auth-subtitle">New to Adbay? <a href="#" onclick="showSection('signup')">Create account</a></p>
-        
-        <form action="{{ url_for('login') }}" method="POST" class="auth-form">
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit" class="auth-button primary">Sign In</button>
-        </form>
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="text-center mb-4">
+                <h1 class="h2">Adbay</h1>
+                <div class="mb-3">
+                    <label for="language" class="form-label" data-translate="select_language">Select Language:</label>
+                    <select id="language" class="form-select">
+                        <option value="en">English</option>
+                        <option value="es">Español</option>
+                        <option value="fr">Français</option>
+                    </select>
+                </div>
+            </div>
 
-        <div class="separator">or</div>
-        <button onclick="showSection('signup')" class="auth-button secondary">Create New Account</button>
-    </div>
-    
-    <!-- Sign Up Form -->
-    <div id="signup-section" class="auth-section" style="display: none;">
-        <h2>Create your account</h2>
-        <p class="auth-subtitle">Already have an account? <a href="#" onclick="showSection('login')">Sign in</a></p>
-        
-        <form action="{{ url_for('signup') }}" method="POST" class="auth-form">
-            <input type="text" name="username" placeholder="Username" required>
-            <input type="email" name="email" placeholder="Email" required>
-            <input type="password" name="password" placeholder="Password" required>
-            <button type="submit" class="auth-button primary">Create Account</button>
-        </form>
+            <!-- Login Section -->
+            <div id="login-section">
+                <h2 class="h3 mb-3" data-translate="login_title">Sign in to your account</h2>
+                <p class="text-muted">
+                    New to Adbay? <a href="#" onclick="showSection('signup')" class="text-decoration-none">Create account</a>
+                </p>
+
+                <form action="{{ url_for('login') }}" method="POST" class="needs-validation" novalidate>
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="loginEmail" name="email" placeholder="name@example.com" required>
+                        <label for="loginEmail" data-translate="email">Email</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="loginPassword" name="password" placeholder="Password" required>
+                        <label for="loginPassword" data-translate="password">Password</label>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg" data-translate="login">Sign In</button>
+                    </div>
+                </form>
+            </div>
+
+            <!-- Sign Up Section -->
+            <div id="signup-section" style="display: none;">
+                <h2 class="h3 mb-3" data-translate="signup_title">Create your account</h2>
+                <p class="text-muted">
+                    Already have an account? <a href="#" onclick="showSection('login')" class="text-decoration-none">Sign in</a>
+                </p>
+
+                <form action="{{ url_for('signup') }}" method="POST" class="needs-validation" novalidate>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                        <label for="username" data-translate="username">Username</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="email" class="form-control" id="email" name="email" placeholder="name@example.com" required>
+                        <label for="email" data-translate="email">Email</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                        <label for="password" data-translate="password">Password</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
+                        <label for="confirmPassword" data-translate="confirm_password">Confirm Password</label>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg" data-translate="signup">Sign Up</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
