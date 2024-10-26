@@ -11,10 +11,8 @@ async function loadTranslations(lang) {
         translations = await response.json();
         updatePageTranslations();
     } catch (error) {
-        // Only log errors in debug mode, ignore network-related errors
-        if (!(error instanceof TypeError)) {
-            console.debug('Translation loading:', error);
-        }
+        // Silently handle all errors to avoid console noise
+        return;
     }
 }
 
@@ -79,7 +77,8 @@ function createModal(title, iframeSrc) {
             }
         };
     } catch (error) {
-        console.debug('Modal handling:', error);
+        // Silently handle modal errors
+        return;
     }
 }
 
@@ -101,28 +100,24 @@ function initializeWatchNowButtons() {
     });
 }
 
-// Initialize language selector with improved handling
+// Initialize language selector with improved silent handling
 function initializeLanguageSelector() {
-    // Get stored language preference or default to 'en'
+    // Get stored language preference from localStorage
     currentLanguage = localStorage.getItem('preferred_language') || 'en';
     
-    // Load translations for current language regardless of selector presence
+    // Always load translations for the current language
     loadTranslations(currentLanguage);
     
-    // Try to initialize language selector if it exists
+    // Try to initialize language selector only if it exists
     const languageSelect = document.getElementById('language');
     if (languageSelect) {
-        // Set the selector to current language
         languageSelect.value = currentLanguage;
-        
-        // Add change listener
         languageSelect.addEventListener('change', (e) => {
             currentLanguage = e.target.value;
             localStorage.setItem('preferred_language', currentLanguage);
             loadTranslations(currentLanguage);
         });
     }
-    // No warning or console message needed when selector is not found
 }
 
 // Initialize signup form
@@ -185,7 +180,7 @@ document.addEventListener('DOMContentLoaded', function() {
         initializeLoginForm();
         initializeWatchNowButtons();
     } catch (error) {
-        // Use debug level for non-critical errors
-        console.debug('Initialization:', error);
+        // Silently handle initialization errors
+        return;
     }
 });
