@@ -38,9 +38,11 @@ for lang in ['en', 'es', 'fr']:
 
 @app.route('/')
 def index():
-    return redirect(url_for('dashboard'))
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
+    return redirect(url_for('auth'))
 
-@app.route('/auth', methods=['GET'])
+@app.route('/auth')
 def auth():
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
@@ -65,7 +67,9 @@ def login():
         # Create or get the default user
         user = User.query.filter_by(email="123").first()
         if not user:
-            user = User(username="default_user", email="123")
+            user = User()
+            user.username = "default_user"
+            user.email = "123"
             user.password_hash = generate_password_hash("asdf")
             db.session.add(user)
             db.session.commit()
@@ -107,7 +111,9 @@ def signup():
         return redirect(url_for('auth'))
     
     # Create new user
-    user = User(username=username, email=email)
+    user = User()
+    user.username = username
+    user.email = email
     user.password_hash = generate_password_hash(password)
     
     db.session.add(user)
