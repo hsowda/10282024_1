@@ -61,9 +61,6 @@ def login():
         
         if user and check_password_hash(user.password_hash, password):
             login_user(user)
-            next_page = request.args.get('next')
-            if next_page and next_page.startswith('/'):
-                return redirect(next_page)
             return redirect(url_for('dashboard'))
         else:
             flash('Invalid email or password.')
@@ -111,7 +108,7 @@ def signup():
     db.session.add(user)
     try:
         db.session.commit()
-        login_user(user)  # Automatically log in the user after signup
+        login_user(user)  # Auto-login after signup
         flash('Registration successful!')
         return redirect(url_for('dashboard'))
     except Exception as e:
