@@ -29,20 +29,21 @@ function updatePageTranslations() {
     });
 }
 
-// Initialize language handling
 function initializeLanguageHandling() {
+    const languageSelect = document.getElementById('language');
+    if (!languageSelect) {
+        return; // Exit if language selector isn't present
+    }
+    
     currentLanguage = localStorage.getItem('preferred_language') || 'en';
     loadTranslations(currentLanguage);
     
-    const languageSelect = document.getElementById('language');
-    if (languageSelect) {
-        languageSelect.value = currentLanguage;
-        languageSelect.addEventListener('change', (e) => {
-            currentLanguage = e.target.value;
-            localStorage.setItem('preferred_language', currentLanguage);
-            loadTranslations(currentLanguage);
-        });
-    }
+    languageSelect.value = currentLanguage;
+    languageSelect.addEventListener('change', (e) => {
+        currentLanguage = e.target.value;
+        localStorage.setItem('preferred_language', currentLanguage);
+        loadTranslations(currentLanguage);
+    });
 }
 
 // Form validation
