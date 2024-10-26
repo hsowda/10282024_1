@@ -90,29 +90,21 @@ def logout():
 def signup():
     from models import User
     
-    if current_user.is_authenticated:
-        return redirect(url_for('dashboard'))
-    
-    username = request.form['username']
     email = request.form['email']
     password = request.form['password']
     
-    if not all([username, email, password]):
+    if not all([email, password]):
         flash('All fields are required')
         return redirect(url_for('auth'))
     
     # Check if user exists
-    if User.query.filter_by(username=username).first():
-        flash('Username already exists')
-        return redirect(url_for('auth'))
-    
     if User.query.filter_by(email=email).first():
         flash('Email already registered')
         return redirect(url_for('auth'))
     
-    # Create new user
+    # Create new user with email as username
     user = User()
-    user.username = username
+    user.username = email  # Use email as username
     user.email = email
     user.password_hash = generate_password_hash(password)
     
