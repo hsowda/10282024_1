@@ -11,8 +11,10 @@ async function loadTranslations(lang) {
         translations = await response.json();
         updatePageTranslations();
     } catch (error) {
-        // Silently handle translation loading errors in non-debug environments
-        console.debug('Translation loading:', error);
+        // Only log errors in debug mode, ignore network-related errors
+        if (!(error instanceof TypeError)) {
+            console.debug('Translation loading:', error);
+        }
     }
 }
 
@@ -89,7 +91,11 @@ function initializeWatchNowButtons() {
             const title = button.getAttribute('data-title') || 'Watch Now';
             const iframeSrc = button.getAttribute('data-src');
             if (iframeSrc) {
-                createModal(title, iframeSrc);
+                if (title === 'Trending') {
+                    window.location.href = iframeSrc;
+                } else {
+                    createModal(title, iframeSrc);
+                }
             }
         });
     });
@@ -100,7 +106,7 @@ function initializeLanguageSelector() {
     // Get stored language preference or default to 'en'
     currentLanguage = localStorage.getItem('preferred_language') || 'en';
     
-    // Always load translations for the current language
+    // Load translations for current language regardless of selector presence
     loadTranslations(currentLanguage);
     
     // Try to initialize language selector if it exists
@@ -112,12 +118,11 @@ function initializeLanguageSelector() {
         // Add change listener
         languageSelect.addEventListener('change', (e) => {
             currentLanguage = e.target.value;
-            // Store language preference
             localStorage.setItem('preferred_language', currentLanguage);
             loadTranslations(currentLanguage);
         });
     }
-    // No warning needed - selector may not exist on all pages
+    // No warning or console message needed when selector is not found
 }
 
 // Initialize signup form
