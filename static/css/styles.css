@@ -3,51 +3,94 @@
     --primary-hover: #2b4fb4;
 }
 
-/* Form styles */
-.form-floating > .form-control:focus ~ label,
-.form-floating > .form-control:not(:placeholder-shown) ~ label {
-    color: var(--bs-body-color);
-    opacity: 0.65;
+/* Auth container styles */
+.auth-container {
+    max-width: 400px;
+    margin: 80px auto;
+    padding: 40px;
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.form-floating > .form-control {
-    height: calc(3.5rem + 2px);
-    line-height: 1.25;
+.logo-container {
+    text-align: center;
+    margin-bottom: 40px;
 }
 
-.form-floating > label {
-    padding: 1rem 0.75rem;
+.auth-section {
+    text-align: center;
+}
+
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.auth-form input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.auth-button {
+    padding: 12px;
+    background: #40E0D0;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.auth-button:hover {
+    background: #3CC0B0;
+}
+
+.auth-subtitle {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.auth-subtitle a {
+    color: #40E0D0;
+    text-decoration: none;
 }
 
 /* Button styles */
-.btn-primary {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
+.button-group {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-top: 20px;
 }
 
-.btn-primary:hover {
-    background-color: var(--primary-hover);
-    border-color: var(--primary-hover);
+.watch-now-button {
+    background: #40E0D0;
+    color: white;
+    padding: 10px 20px;
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background-color 0.3s;
 }
 
-.btn-outline-secondary {
-    border-width: 1px;
-}
-
-/* Social buttons */
-.btn-outline-secondary img {
-    width: 20px;
-    height: 20px;
-}
-
-/* Container max-width for login/signup forms */
-@media (min-width: 768px) {
-    .col-md-6 {
-        max-width: 460px;
-    }
+.watch-now-button:hover {
+    background: #3CC0B0;
+    text-decoration: none;
+    color: white;
 }
 
 /* Utility classes */
 .hidden {
     display: none !important;
+}
+
+/* Ad container styles */
+.ad-container {
+    margin: 20px auto;
+    max-width: 800px;
+    text-align: center;
 }
