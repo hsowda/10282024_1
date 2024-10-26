@@ -5,11 +5,10 @@ let translations = {};
 async function loadTranslations(lang) {
     try {
         const response = await fetch(`/get_translation/${lang}`);
-        if (response.ok) {
-            translations = await response.json();
-        }
+        translations = response.ok ? await response.json() : {};
         updatePageTranslations();
     } catch {
+        translations = {};
         updatePageTranslations();
     }
 }
@@ -89,21 +88,17 @@ function initializeWatchNowButtons() {
             const title = button.getAttribute('data-title') || 'Watch Now';
             const iframeSrc = button.getAttribute('data-src');
             if (iframeSrc) {
-                window.location.href = iframeSrc;
+                createModal(title, iframeSrc);
             }
         });
     });
 }
 
-// Language selector initialization with improved silent handling
+// Language selector initialization with completely silent handling
 function initializeLanguageSelector() {
-    // Get stored language or default without any console output
     currentLanguage = localStorage.getItem('preferred_language') || 'en';
-    
-    // Always load translations regardless of selector presence
     loadTranslations(currentLanguage);
     
-    // Only initialize selector if present, without any warnings
     const languageSelect = document.getElementById('language');
     if (languageSelect) {
         languageSelect.value = currentLanguage;
@@ -124,7 +119,10 @@ function initializeSignupForm() {
         const passwordInput = document.getElementById('password');
         const confirmPasswordInput = document.getElementById('confirmPassword');
         
-        if (!passwordInput || !confirmPasswordInput) return;
+        if (!passwordInput || !confirmPasswordInput) {
+            e.preventDefault();
+            return;
+        }
         
         if (!passwordInput.value || !confirmPasswordInput.value) {
             e.preventDefault();
@@ -165,9 +163,12 @@ function initializeLoginForm() {
 
 // Main initialization
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize all components silently
-    initializeLanguageSelector();
-    initializeSignupForm();
-    initializeLoginForm();
-    initializeWatchNowButtons();
+    try {
+        initializeLanguageSelector();
+        initializeSignupForm();
+        initializeLoginForm();
+        initializeWatchNowButtons();
+    } catch {
+        loadTranslations(currentLanguage);
+    }
 });

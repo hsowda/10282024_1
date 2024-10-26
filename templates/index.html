@@ -20,6 +20,10 @@
         {% if not current_user.is_authenticated %}
             <button class="button primary" onclick="toggleSections('signup')" data-translate="signup">Sign Up</button>
             <a href="{{ url_for('login') }}" class="button secondary" data-translate="login">Login</a>
+        {% else %}
+            <form action="{{ url_for('logout') }}" method="POST" style="display: inline;">
+                <button type="submit" class="button primary" data-translate="logout">Logout</button>
+            </form>
         {% endif %}
         <a href="https://temeculahills-hds.w3spaces.com/" class="button secondary" data-translate="created_by">Created by Hunter Sowda | About Me</a>
     </div>
