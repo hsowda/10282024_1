@@ -11,10 +11,8 @@ async function loadTranslations(lang) {
         translations = await response.json();
         updatePageTranslations();
     } catch (error) {
-        // Only log critical errors, not connection-related ones
-        if (!(error instanceof TypeError)) {
-            console.debug('Translation loading:', error);
-        }
+        // Silently handle translation loading errors in non-debug environments
+        console.debug('Translation loading:', error);
     }
 }
 
@@ -97,21 +95,29 @@ function initializeWatchNowButtons() {
     });
 }
 
-// Initialize language selector
+// Initialize language selector with improved handling
 function initializeLanguageSelector() {
-    // Always load translations regardless of selector presence
+    // Get stored language preference or default to 'en'
+    currentLanguage = localStorage.getItem('preferred_language') || 'en';
+    
+    // Always load translations for the current language
     loadTranslations(currentLanguage);
     
     // Try to initialize language selector if it exists
     const languageSelect = document.getElementById('language');
     if (languageSelect) {
+        // Set the selector to current language
         languageSelect.value = currentLanguage;
+        
+        // Add change listener
         languageSelect.addEventListener('change', (e) => {
             currentLanguage = e.target.value;
+            // Store language preference
+            localStorage.setItem('preferred_language', currentLanguage);
             loadTranslations(currentLanguage);
         });
     }
-    // No warning is needed when selector is not found - this is an expected case
+    // No warning needed - selector may not exist on all pages
 }
 
 // Initialize signup form
