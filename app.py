@@ -63,13 +63,24 @@ def login():
         
     email = request.form['email']
     password = request.form['password']
-    user = User.query.filter_by(email=email).first()
     
-    if user and check_password_hash(user.password_hash, password):
+    # Check for hardcoded credentials
+    if email == "123" and password == "asdf":
+        # Create or get the default user
+        user = User.query.filter_by(email="123").first()
+        if not user:
+            user = User(
+                username="default_user",
+                email="123",
+                password_hash=generate_password_hash("asdf")
+            )
+            db.session.add(user)
+            db.session.commit()
+        
         login_user(user)
         return redirect(url_for('dashboard'))
     
-    flash('Invalid email or password.')
+    flash('Invalid credentials. Use 123 for login and asdf for password.')
     return redirect(url_for('auth'))
 
 @app.route('/logout')
