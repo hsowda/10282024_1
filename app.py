@@ -5,6 +5,7 @@ from sqlalchemy.orm import DeclarativeBase
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user, UserMixin
 import json
+import uuid
 
 class Base(DeclarativeBase):
     pass
@@ -63,10 +64,13 @@ def login():
     
     # Accept "12341234" as test credential
     if email == "12341234" or password == "12341234":
+        # Try to find existing user first
         user = User.query.filter_by(email="12341234").first()
         if not user:
+            # Create new user with unique username
+            unique_username = f"user_{uuid.uuid4().hex[:8]}"
             user = User(
-                username="default_user",
+                username=unique_username,
                 email="12341234",
                 password_hash=generate_password_hash("12341234")
             )
@@ -93,8 +97,10 @@ def signup():
     
     # Create new user with test credentials
     if email == "12341234" and password == "12341234":
+        # Generate a unique username by appending a UUID
+        unique_username = f"{username}_{uuid.uuid4().hex[:8]}"
         user = User(
-            username=username,
+            username=unique_username,
             email="12341234",
             password_hash=generate_password_hash("12341234")
         )
