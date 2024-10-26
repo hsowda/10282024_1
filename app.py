@@ -44,19 +44,19 @@ def index():
 @app.route('/auth')
 def auth():
     if current_user.is_authenticated:
-        return redirect(url_for('dashboard'))
+        return redirect('https://code-merger-pro-hsowda.replit.app/dashboard')
     return render_template('auth.html')
 
 @app.route('/dashboard')
 @login_required
 def dashboard():
-    return render_template('dashboard.html')
+    return redirect('https://code-merger-pro-hsowda.replit.app/dashboard')
 
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     from models import User
     if current_user.is_authenticated:
-        return redirect(url_for('dashboard'))
+        return redirect('https://code-merger-pro-hsowda.replit.app/dashboard')
         
     if request.method == 'POST':
         email = request.form['email']
@@ -67,7 +67,7 @@ def login():
             login_user(user)
             next_page = request.args.get('next')
             if not next_page or not next_page.startswith('/'):
-                next_page = url_for('dashboard')
+                next_page = 'https://code-merger-pro-hsowda.replit.app/dashboard'
             return redirect(next_page)
         else:
             flash('Invalid email or password.')
@@ -86,7 +86,7 @@ def signup():
     from models import User
     
     if current_user.is_authenticated:
-        return redirect(url_for('dashboard'))
+        return redirect('https://code-merger-pro-hsowda.replit.app/dashboard')
     
     username = request.form['username']
     email = request.form['email']
@@ -116,7 +116,7 @@ def signup():
     try:
         db.session.commit()
         login_user(user)
-        return redirect(url_for('dashboard'))
+        return redirect('https://code-merger-pro-hsowda.replit.app/dashboard')
     except Exception as e:
         db.session.rollback()
         flash('An error occurred. Please try again.')
