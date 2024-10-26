@@ -5,8 +5,10 @@ let translations = {};
 async function loadTranslations(lang) {
     try {
         const response = await fetch(`/get_translation/${lang}`);
-        translations = response.ok ? await response.json() : {};
-        updatePageTranslations();
+        if (response.ok) {
+            translations = await response.json();
+            updatePageTranslations();
+        }
     } catch {
         translations = {};
         updatePageTranslations();
@@ -94,11 +96,15 @@ function initializeWatchNowButtons() {
     });
 }
 
-// Language selector initialization with completely silent handling
+// Language selector initialization with improved silent handling
 function initializeLanguageSelector() {
+    // Get stored language or default to 'en' silently
     currentLanguage = localStorage.getItem('preferred_language') || 'en';
+    
+    // Always load translations regardless of selector presence
     loadTranslations(currentLanguage);
     
+    // Initialize selector only if it exists, without any warnings
     const languageSelect = document.getElementById('language');
     if (languageSelect) {
         languageSelect.value = currentLanguage;
@@ -163,12 +169,9 @@ function initializeLoginForm() {
 
 // Main initialization
 document.addEventListener('DOMContentLoaded', function() {
-    try {
-        initializeLanguageSelector();
-        initializeSignupForm();
-        initializeLoginForm();
-        initializeWatchNowButtons();
-    } catch {
-        loadTranslations(currentLanguage);
-    }
+    // Initialize all components silently
+    initializeLanguageSelector();
+    initializeSignupForm();
+    initializeLoginForm();
+    initializeWatchNowButtons();
 });
