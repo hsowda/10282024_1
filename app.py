@@ -13,7 +13,7 @@ db = SQLAlchemy(model_class=Base)
 app = Flask(__name__)
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'index'
+login_manager.login_view = 'auth'
 login_manager.login_message = 'Please log in to access this page.'
 
 # Configuration
@@ -41,6 +41,12 @@ for lang in ['en', 'es', 'fr']:
 def index():
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
+    return redirect(url_for('auth'))
+
+@app.route('/auth', methods=['GET'])
+def auth():
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
     return render_template('auth.html')
 
 @app.route('/dashboard')
@@ -48,34 +54,29 @@ def index():
 def dashboard():
     return render_template('dashboard.html')
 
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['POST'])
 def login():
     from models import User
+    
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
         
-    if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
-        user = User.query.filter_by(email=email).first()
-        
-        if user and check_password_hash(user.password_hash, password):
-            login_user(user)
-            next_page = request.args.get('next')
-            if not next_page or not next_page.startswith('/'):
-                next_page = url_for('dashboard')
-            return redirect(next_page)
-        else:
-            flash('Invalid email or password.')
-            return redirect(url_for('index'))
-            
-    return redirect(url_for('index'))
+    email = request.form['email']
+    password = request.form['password']
+    user = User.query.filter_by(email=email).first()
+    
+    if user and check_password_hash(user.password_hash, password):
+        login_user(user)
+        return redirect(url_for('dashboard'))
+    
+    flash('Invalid email or password.')
+    return redirect(url_for('auth'))
 
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    return redirect(url_for('index'))
+    return redirect(url_for('auth'))
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -90,16 +91,16 @@ def signup():
     
     if not all([username, email, password]):
         flash('All fields are required')
-        return redirect(url_for('index'))
+        return redirect(url_for('auth'))
     
     # Check if user exists
     if User.query.filter_by(username=username).first():
         flash('Username already exists')
-        return redirect(url_for('index'))
+        return redirect(url_for('auth'))
     
     if User.query.filter_by(email=email).first():
         flash('Email already registered')
-        return redirect(url_for('index'))
+        return redirect(url_for('auth'))
     
     # Create new user
     user = User(
@@ -117,7 +118,7 @@ def signup():
         db.session.rollback()
         flash('An error occurred. Please try again.')
         
-    return redirect(url_for('index'))
+    return redirect(url_for('auth'))
 
 @app.route('/get_translation/<lang>')
 def get_translation(lang):
