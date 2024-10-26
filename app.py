@@ -14,7 +14,6 @@ app = Flask(__name__)
 login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = 'auth'
-login_manager.login_message = 'Please log in to access this page.'
 
 # Configuration
 app.secret_key = os.environ.get("FLASK_SECRET_KEY") or "dev_key_123"
@@ -39,9 +38,7 @@ for lang in ['en', 'es', 'fr']:
 
 @app.route('/')
 def index():
-    if current_user.is_authenticated:
-        return redirect(url_for('dashboard'))
-    return redirect(url_for('auth'))
+    return redirect(url_for('dashboard'))
 
 @app.route('/auth', methods=['GET'])
 def auth():
@@ -50,7 +47,6 @@ def auth():
     return render_template('auth.html')
 
 @app.route('/dashboard')
-@login_required
 def dashboard():
     return render_template('dashboard.html')
 
@@ -69,11 +65,8 @@ def login():
         # Create or get the default user
         user = User.query.filter_by(email="123").first()
         if not user:
-            user = User(
-                username="default_user",
-                email="123",
-                password_hash=generate_password_hash("asdf")
-            )
+            user = User(username="default_user", email="123")
+            user.password_hash = generate_password_hash("asdf")
             db.session.add(user)
             db.session.commit()
         
@@ -84,9 +77,9 @@ def login():
     return redirect(url_for('auth'))
 
 @app.route('/logout')
-@login_required
 def logout():
-    logout_user()
+    if current_user.is_authenticated:
+        logout_user()
     return redirect(url_for('auth'))
 
 @app.route('/signup', methods=['POST'])
@@ -114,11 +107,8 @@ def signup():
         return redirect(url_for('auth'))
     
     # Create new user
-    user = User(
-        username=username,
-        email=email,
-        password_hash=generate_password_hash(password)
-    )
+    user = User(username=username, email=email)
+    user.password_hash = generate_password_hash(password)
     
     db.session.add(user)
     try:
