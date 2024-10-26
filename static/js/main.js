@@ -5,13 +5,13 @@ let translations = {};
 async function loadTranslations(lang) {
     try {
         const response = await fetch(`/get_translation/${lang}`);
-        if (response.ok) {
-            translations = await response.json();
-            updatePageTranslations();
+        if (!response.ok) {
+            return; // Silently return on error
         }
-    } catch {
-        translations = {};
+        translations = await response.json();
         updatePageTranslations();
+    } catch (error) {
+        return; // Silently handle all errors
     }
 }
 
@@ -20,11 +20,7 @@ function updatePageTranslations() {
     elements.forEach(element => {
         const key = element.getAttribute('data-translate');
         if (translations[key]) {
-            if (element.tagName.toLowerCase() === 'input' && element.type === 'submit') {
-                element.value = translations[key];
-            } else {
-                element.textContent = translations[key];
-            }
+            element.textContent = translations[key];
         }
     });
 }
@@ -34,7 +30,9 @@ function toggleSections(section) {
     const welcomeSection = document.getElementById('welcome-section');
     const signupSection = document.getElementById('signup-section');
     
-    if (!welcomeSection || !signupSection) return;
+    if (!welcomeSection || !signupSection) {
+        return; // Silently return if sections don't exist
+    }
 
     welcomeSection.classList.toggle('hidden', section === 'signup');
     signupSection.classList.toggle('hidden', section !== 'signup');
@@ -69,7 +67,7 @@ function createModal(title, iframeSrc) {
 
         const closeButton = modal.querySelector('.modal-close');
         if (closeButton) {
-            closeButton.addEventListener('click', () => modal.remove());
+            closeButton.onclick = () => modal.remove();
         }
 
         window.onclick = (event) => {
@@ -77,8 +75,8 @@ function createModal(title, iframeSrc) {
                 modal.remove();
             }
         };
-    } catch {
-        return;
+    } catch (error) {
+        return; // Silently handle modal errors
     }
 }
 
@@ -96,15 +94,15 @@ function initializeWatchNowButtons() {
     });
 }
 
-// Language selector initialization with improved silent handling
+// Silent language selector initialization
 function initializeLanguageSelector() {
-    // Get stored language or default to 'en' silently
+    // Get stored language preference from localStorage or default to 'en'
     currentLanguage = localStorage.getItem('preferred_language') || 'en';
     
-    // Always load translations regardless of selector presence
+    // Load translations regardless of selector presence
     loadTranslations(currentLanguage);
     
-    // Initialize selector only if it exists, without any warnings
+    // Try to initialize language selector if present
     const languageSelect = document.getElementById('language');
     if (languageSelect) {
         languageSelect.value = currentLanguage;
@@ -119,7 +117,7 @@ function initializeLanguageSelector() {
 // Initialize signup form
 function initializeSignupForm() {
     const signupForm = document.getElementById('signup-form');
-    if (!signupForm) return;
+    if (!signupForm) return; // Silently return if form doesn't exist
     
     signupForm.addEventListener('submit', function(e) {
         const passwordInput = document.getElementById('password');
@@ -153,7 +151,7 @@ function initializeSignupForm() {
 // Initialize login form
 function initializeLoginForm() {
     const loginForm = document.querySelector('form[action*="login"]');
-    if (!loginForm) return;
+    if (!loginForm) return; // Silently return if form doesn't exist
     
     loginForm.addEventListener('submit', function(e) {
         const emailInput = document.getElementById('email');
@@ -167,11 +165,17 @@ function initializeLoginForm() {
     });
 }
 
-// Main initialization
+// Main initialization with error handling
 document.addEventListener('DOMContentLoaded', function() {
-    // Initialize all components silently
-    initializeLanguageSelector();
-    initializeSignupForm();
-    initializeLoginForm();
-    initializeWatchNowButtons();
+    try {
+        // Initialize core functionality
+        initializeLanguageSelector();
+        
+        // Initialize optional components
+        initializeSignupForm();
+        initializeLoginForm();
+        initializeWatchNowButtons();
+    } catch (error) {
+        return; // Silently handle any initialization errors
+    }
 });
