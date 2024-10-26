@@ -13,7 +13,7 @@ db = SQLAlchemy(model_class=Base)
 app = Flask(__name__)
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'
+login_manager.login_view = 'index'
 login_manager.login_message = 'Please log in to access this page.'
 
 # Configuration
@@ -61,13 +61,16 @@ def login():
         
         if user and check_password_hash(user.password_hash, password):
             login_user(user)
-            return redirect(url_for('dashboard'))
+            next_page = request.args.get('next')
+            if not next_page or not next_page.startswith('/'):
+                next_page = url_for('dashboard')
+            return redirect(next_page)
         else:
             flash('Invalid email or password.')
             
     return render_template('login.html')
 
-@app.route('/logout', methods=['POST'])
+@app.route('/logout')
 @login_required
 def logout():
     logout_user()
@@ -109,7 +112,6 @@ def signup():
     try:
         db.session.commit()
         login_user(user)  # Auto-login after signup
-        flash('Registration successful!')
         return redirect(url_for('dashboard'))
     except Exception as e:
         db.session.rollback()
