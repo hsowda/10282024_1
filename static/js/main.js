@@ -11,7 +11,8 @@ async function loadTranslations(lang) {
         translations = await response.json();
         updatePageTranslations();
     } catch (error) {
-        console.error('Error loading translations:', error);
+        // Silently handle translation loading errors
+        return; // Silent failure
     }
 }
 
@@ -31,7 +32,7 @@ function toggleSections(section) {
     const signupSection = document.getElementById('signup-section');
     
     if (!welcomeSection || !signupSection) {
-        return;
+        return; // Silent return if sections don't exist
     }
 
     welcomeSection.classList.toggle('hidden', section === 'signup');
@@ -76,121 +77,107 @@ function createModal(title, iframeSrc) {
             }
         };
     } catch (error) {
-        console.error('Error creating modal:', error);
+        return; // Silent failure
     }
 }
 
 // Initialize watch now buttons
 function initializeWatchNowButtons() {
-    try {
-        const watchButtons = document.querySelectorAll('.watch-now-button');
-        if (watchButtons.length === 0) return;
+    const watchButtons = document.querySelectorAll('.watch-now-button');
+    if (!watchButtons.length) return; // Silent return if no buttons found
 
-        watchButtons.forEach(button => {
-            button.addEventListener('click', () => {
-                const title = button.getAttribute('data-title') || 'Watch Now';
-                const iframeSrc = button.getAttribute('data-src') || '';
-                if (iframeSrc) {
-                    createModal(title, iframeSrc);
-                }
-            });
+    watchButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const title = button.getAttribute('data-title') || 'Watch Now';
+            const iframeSrc = button.getAttribute('data-src');
+            if (iframeSrc) {
+                createModal(title, iframeSrc);
+            }
         });
-    } catch (error) {
-        console.error('Error initializing watch buttons:', error);
-    }
+    });
 }
 
 // Initialize language selector
 function initializeLanguageSelector() {
-    try {
-        const languageSelect = document.getElementById('language');
-        if (!languageSelect) return;
-        
-        // Initial translation load
+    const languageSelect = document.getElementById('language');
+    // Silent return if language selector doesn't exist (e.g., on dashboard page)
+    if (!languageSelect) return;
+    
+    // Set initial selected value based on current language
+    languageSelect.value = currentLanguage;
+    
+    // Initial translation load
+    loadTranslations(currentLanguage);
+    
+    // Add change event listener
+    languageSelect.addEventListener('change', (e) => {
+        currentLanguage = e.target.value;
         loadTranslations(currentLanguage);
-        
-        // Add change event listener
-        languageSelect.addEventListener('change', (e) => {
-            currentLanguage = e.target.value;
-            loadTranslations(currentLanguage);
-        });
-    } catch (error) {
-        console.error('Error initializing language selector:', error);
-    }
+    });
 }
 
 // Initialize signup form
 function initializeSignupForm() {
-    try {
-        const signupForm = document.getElementById('signup-form');
-        if (!signupForm) return;
+    const signupForm = document.getElementById('signup-form');
+    if (!signupForm) return; // Silent return if form doesn't exist
+    
+    signupForm.addEventListener('submit', function(e) {
+        const passwordInput = document.getElementById('password');
+        const confirmPasswordInput = document.getElementById('confirmPassword');
         
-        signupForm.addEventListener('submit', function(e) {
-            const passwordInput = document.getElementById('password');
-            const confirmPasswordInput = document.getElementById('confirmPassword');
-            
-            if (!passwordInput || !confirmPasswordInput) {
-                e.preventDefault();
-                alert('Password fields not found!');
-                return;
-            }
-            
-            const password = passwordInput.value;
-            const confirmPassword = confirmPasswordInput.value;
-            
-            if (!password || !confirmPassword) {
-                e.preventDefault();
-                alert('Please fill in all password fields!');
-                return;
-            }
-            
-            if (password !== confirmPassword) {
-                e.preventDefault();
-                alert('Passwords do not match!');
-                return;
-            }
-            
-            if (password.length < 8) {
-                e.preventDefault();
-                alert('Password must be at least 8 characters long!');
-                return;
-            }
-        });
-    } catch (error) {
-        console.error('Error initializing signup form:', error);
-    }
+        if (!passwordInput || !confirmPasswordInput) {
+            e.preventDefault();
+            alert('Password fields not found!');
+            return;
+        }
+        
+        if (!passwordInput.value || !confirmPasswordInput.value) {
+            e.preventDefault();
+            alert('Please fill in all password fields!');
+            return;
+        }
+        
+        if (passwordInput.value !== confirmPasswordInput.value) {
+            e.preventDefault();
+            alert('Passwords do not match!');
+            return;
+        }
+        
+        if (passwordInput.value.length < 8) {
+            e.preventDefault();
+            alert('Password must be at least 8 characters long!');
+            return;
+        }
+    });
 }
 
 // Initialize login form
 function initializeLoginForm() {
-    try {
-        const loginForm = document.querySelector('form[action*="login"]');
-        if (!loginForm) return;
+    const loginForm = document.querySelector('form[action*="login"]');
+    if (!loginForm) return; // Silent return if form doesn't exist
+    
+    loginForm.addEventListener('submit', function(e) {
+        const emailInput = document.getElementById('email');
+        const passwordInput = document.getElementById('password');
         
-        loginForm.addEventListener('submit', function(e) {
-            const emailInput = document.getElementById('email');
-            const passwordInput = document.getElementById('password');
-            
-            if (!emailInput?.value || !passwordInput?.value) {
-                e.preventDefault();
-                alert('Please fill in all fields!');
-                return;
-            }
-        });
-    } catch (error) {
-        console.error('Error initializing login form:', error);
-    }
+        if (!emailInput?.value || !passwordInput?.value) {
+            e.preventDefault();
+            alert('Please fill in all fields!');
+            return;
+        }
+    });
 }
 
-// Main initialization - using a flag to prevent multiple initializations
-let initialized = false;
+// Main initialization
 document.addEventListener('DOMContentLoaded', function() {
-    if (initialized) return;
-    initialized = true;
-    
-    // Initialize all components
-    initializeLanguageSelector();
-    initializeSignupForm();
-    initializeLoginForm();
-    initializeWatchNowButtons();
+    try {
+        // Initialize all components
+        initializeLanguageSelector();
+        initializeSignupForm();
+        initializeLoginForm();
+        initializeWatchNowButtons();
+    } catch (error) {
+        // Silently handle any initialization errors
+        return;
+    }
 });
