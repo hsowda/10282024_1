@@ -41,7 +41,7 @@ for lang in ['en', 'es', 'fr']:
 def index():
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
-    return render_template('index.html')
+    return render_template('auth.html')
 
 @app.route('/dashboard')
 @login_required
@@ -67,14 +67,14 @@ def login():
             return redirect(next_page)
         else:
             flash('Invalid email or password.')
+            return redirect(url_for('index'))
             
-    return render_template('login.html')
+    return redirect(url_for('index'))
 
 @app.route('/logout')
 @login_required
 def logout():
     logout_user()
-    flash('You have been logged out.')
     return redirect(url_for('index'))
 
 @app.route('/signup', methods=['POST'])
@@ -111,7 +111,7 @@ def signup():
     db.session.add(user)
     try:
         db.session.commit()
-        login_user(user)  # Auto-login after signup
+        login_user(user)
         return redirect(url_for('dashboard'))
     except Exception as e:
         db.session.rollback()
