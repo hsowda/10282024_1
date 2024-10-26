@@ -11,8 +11,10 @@ async function loadTranslations(lang) {
         translations = await response.json();
         updatePageTranslations();
     } catch (error) {
-        // Silently handle translation loading errors
-        console.debug('Translation loading:', error);
+        // Only log critical errors, not connection-related ones
+        if (!(error instanceof TypeError)) {
+            console.debug('Translation loading:', error);
+        }
     }
 }
 
@@ -77,7 +79,7 @@ function createModal(title, iframeSrc) {
             }
         };
     } catch (error) {
-        console.debug('Modal creation:', error);
+        console.debug('Modal handling:', error);
     }
 }
 
@@ -97,7 +99,7 @@ function initializeWatchNowButtons() {
 
 // Initialize language selector
 function initializeLanguageSelector() {
-    // Always load translations for current language, regardless of selector presence
+    // Always load translations regardless of selector presence
     loadTranslations(currentLanguage);
     
     // Try to initialize language selector if it exists
@@ -109,6 +111,7 @@ function initializeLanguageSelector() {
             loadTranslations(currentLanguage);
         });
     }
+    // No warning is needed when selector is not found - this is an expected case
 }
 
 // Initialize signup form
@@ -171,7 +174,7 @@ document.addEventListener('DOMContentLoaded', function() {
         initializeLoginForm();
         initializeWatchNowButtons();
     } catch (error) {
-        // Only log initialization errors in debug mode
+        // Use debug level for non-critical errors
         console.debug('Initialization:', error);
     }
 });
