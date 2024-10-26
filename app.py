@@ -61,36 +61,21 @@ def login():
     email = request.form['email']
     password = request.form['password']
     
-    # Accept "1234" as any credential
-    if email == "1234" or password == "1234":
-        # Use email "123" for database consistency
-        user = User.query.filter_by(email="123").first()
+    # Accept "12341234" as test credential
+    if email == "12341234" or password == "12341234":
+        user = User.query.filter_by(email="12341234").first()
         if not user:
             user = User(
                 username="default_user",
-                email="123",
-                password_hash=generate_password_hash("asdf")
+                email="12341234",
+                password_hash=generate_password_hash("12341234")
             )
             db.session.add(user)
             db.session.commit()
         login_user(user)
         return redirect(url_for('dashboard'))
     
-    # Keep existing "123/asdf" credentials as fallback
-    if email == "123" and password == "asdf":
-        user = User.query.filter_by(email="123").first()
-        if not user:
-            user = User(
-                username="default_user",
-                email="123",
-                password_hash=generate_password_hash("asdf")
-            )
-            db.session.add(user)
-            db.session.commit()
-        login_user(user)
-        return redirect(url_for('dashboard'))
-    
-    flash('Invalid credentials. Use "1234" in any field, or "123" with password "asdf"')
+    flash('Invalid credentials. Use "12341234" as email or password')
     return redirect(url_for('auth'))
 
 @app.route('/signup', methods=['POST'])
@@ -106,19 +91,19 @@ def signup():
         flash('All fields are required')
         return redirect(url_for('auth'))
     
-    # Create new user with hardcoded credentials
-    if email == "123" and password == "asdf":
+    # Create new user with test credentials
+    if email == "12341234" and password == "12341234":
         user = User(
             username=username,
-            email="123",
-            password_hash=generate_password_hash("asdf")
+            email="12341234",
+            password_hash=generate_password_hash("12341234")
         )
         db.session.add(user)
         db.session.commit()
         login_user(user)
         return redirect(url_for('dashboard'))
     
-    flash('Please use email "123" and password "asdf" for testing')
+    flash('Please use "12341234" as both email and password for testing')
     return redirect(url_for('auth'))
 
 @app.route('/logout')
