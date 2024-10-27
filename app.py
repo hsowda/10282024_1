@@ -39,26 +39,26 @@ for lang in ['en', 'es', 'fr']:
 @app.route('/')
 def index():
     if current_user.is_authenticated:
-        return redirect('https://beautifulafflxtn.w3spaces.com/index.html')
+        return redirect('https://code-merger-pro.w3spaces.com/auth')
     return redirect(url_for('auth'))
 
 @app.route('/auth')
 @app.route('/652d0869-c069-481a-8e8d-557fc9ef3531-00-1vz1q6lqhootf.janeway.replit.dev/auth')
 def auth():
     if current_user.is_authenticated:
-        return redirect('https://beautifulafflxtn.w3spaces.com/index.html')
+        return redirect('https://code-merger-pro.w3spaces.com/auth')
     return render_template('auth.html')
 
 @app.route('/dashboard')
 def dashboard():
     if not current_user.is_authenticated:
         return redirect(url_for('auth'))
-    return redirect('https://beautifulafflxtn.w3spaces.com/index.html')
+    return redirect('https://code-merger-pro.w3spaces.com/auth')
 
 @app.route('/login', methods=['POST'])
 def login():
     if current_user.is_authenticated:
-        return redirect('https://beautifulafflxtn.w3spaces.com/index.html')
+        return redirect('https://code-merger-pro.w3spaces.com/auth')
         
     username = request.form['username']
     password = request.form['password']
@@ -74,7 +74,7 @@ def login():
             db.session.add(user)
             db.session.commit()
         login_user(user)
-        return redirect('https://beautifulafflxtn.w3spaces.com/index.html')
+        return redirect('https://code-merger-pro.w3spaces.com/auth')
     
     flash('Invalid credentials. Use "12341234" as username or password')
     return redirect(url_for('auth'))
