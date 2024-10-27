@@ -59,19 +59,15 @@ def login():
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
         
-    email = request.form['email']
+    username = request.form['username']
     password = request.form['password']
     
     # Accept "12341234" as test credential
-    if email == "12341234" or password == "12341234":
-        # Try to find existing user first
-        user = User.query.filter_by(email="12341234").first()
+    if username == "12341234" or password == "12341234":
+        user = User.query.filter_by(username="12341234").first()
         if not user:
-            # Create new user with unique username
-            unique_username = f"user_{uuid.uuid4().hex[:8]}"
             user = User(
-                username=unique_username,
-                email="12341234",
+                username="12341234",
                 password_hash=generate_password_hash("12341234")
             )
             db.session.add(user)
@@ -79,7 +75,7 @@ def login():
         login_user(user)
         return redirect(url_for('dashboard'))
     
-    flash('Invalid credentials. Use "12341234" as email or password')
+    flash('Invalid credentials. Use "12341234" as username or password')
     return redirect(url_for('auth'))
 
 @app.route('/signup', methods=['POST'])
@@ -88,20 +84,18 @@ def signup():
         return redirect(url_for('dashboard'))
         
     username = request.form['username']
-    email = request.form['email']
     password = request.form['password']
     
-    if not all([username, email, password]):
+    if not all([username, password]):
         flash('All fields are required')
         return redirect(url_for('auth'))
     
     # Create new user with test credentials
-    if email == "12341234" and password == "12341234":
-        # Generate a unique username by appending a UUID
+    if password == "12341234":
+        # Generate a unique username if using test credentials
         unique_username = f"{username}_{uuid.uuid4().hex[:8]}"
         user = User(
             username=unique_username,
-            email="12341234",
             password_hash=generate_password_hash("12341234")
         )
         db.session.add(user)
@@ -109,7 +103,7 @@ def signup():
         login_user(user)
         return redirect(url_for('dashboard'))
     
-    flash('Please use "12341234" as both email and password for testing')
+    flash('Please use "12341234" as password for testing')
     return redirect(url_for('auth'))
 
 @app.route('/logout')
