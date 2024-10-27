@@ -53,11 +53,6 @@
                     </div>
                     <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600">Sign Up</button>
                 </form>
-                <div class="mt-4">
-                    <button class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600" onclick="window.location.href='https://hdsoda.github.io/HunterSowda-HTML/'">
-                        Back to Home
-                    </button>
-                </div>
             </div>
         </main>
     </div>
