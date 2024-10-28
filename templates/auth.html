@@ -2,10 +2,6 @@
 
 {% block content %}
 <div class="auth-container">
-    <div class="logo-section">
-        <h1 class="title">Adbay ♣</h1>
-    </div>
-
     <div class="auth-box">
         <h2 class="auth-title" data-translate="signin_title">Sign in to your account</h2>
         <p class="auth-subtitle">
@@ -16,34 +12,79 @@
         <!-- Login Form -->
         <form id="login-form" action="{{ url_for('login') }}" method="POST" class="auth-form">
             <div class="form-group">
-                <input type="email" id="login-email" name="email" required class="form-input" placeholder="Email or username">
+                <input type="email" 
+                       id="login-email" 
+                       name="email" 
+                       required 
+                       class="form-input" 
+                       placeholder="Email or username"
+                       autocomplete="email">
             </div>
-            <div class="form-group" id="login-password-group" style="display: none;">
-                <input type="password" id="login-password" name="password" class="form-input" placeholder="Password">
+            <div id="login-password-group" style="display: none;">
+                <div class="form-group">
+                    <input type="password" 
+                           id="login-password" 
+                           name="password" 
+                           class="form-input" 
+                           placeholder="Password"
+                           autocomplete="current-password">
+                </div>
                 <div class="stay-signed">
                     <input type="checkbox" id="stay-signed" name="remember">
                     <label for="stay-signed" data-translate="stay_signed">Stay signed in</label>
                 </div>
             </div>
-            <button type="button" onclick="continueAuth()" id="continue-btn" class="button primary full-width" data-translate="continue">Continue</button>
-            <button type="submit" id="signin-btn" class="button primary full-width" style="display: none;" data-translate="signin">Sign in</button>
+            <button type="button" 
+                    id="continue-btn" 
+                    class="button continue" 
+                    onclick="continueAuth()" 
+                    data-translate="continue">Continue</button>
+            <button type="submit" 
+                    id="signin-btn" 
+                    class="button continue" 
+                    style="display: none;" 
+                    data-translate="signin">Sign in</button>
         </form>
 
         <!-- Register Form -->
         <form id="register-form" action="{{ url_for('signup') }}" method="POST" class="auth-form" style="display: none;">
             <div class="form-group">
-                <input type="text" id="register-username" name="username" required class="form-input" placeholder="Username">
+                <input type="text" 
+                       id="register-username" 
+                       name="username" 
+                       required 
+                       class="form-input" 
+                       placeholder="Username"
+                       autocomplete="username">
             </div>
             <div class="form-group">
-                <input type="email" id="register-email" name="email" required class="form-input" placeholder="Email">
+                <input type="email" 
+                       id="register-email" 
+                       name="email" 
+                       required 
+                       class="form-input" 
+                       placeholder="Email"
+                       autocomplete="email">
             </div>
             <div class="form-group">
-                <input type="password" id="register-password" name="password" required class="form-input" placeholder="Password">
+                <input type="password" 
+                       id="register-password" 
+                       name="password" 
+                       required 
+                       class="form-input" 
+                       placeholder="Password"
+                       autocomplete="new-password">
             </div>
             <div class="form-group">
-                <input type="password" id="register-confirm-password" name="confirmPassword" required class="form-input" placeholder="Confirm password">
+                <input type="password" 
+                       id="register-confirm-password" 
+                       name="confirmPassword" 
+                       required 
+                       class="form-input" 
+                       placeholder="Confirm password"
+                       autocomplete="new-password">
             </div>
-            <button type="submit" class="button primary full-width" data-translate="create_account">Create account</button>
+            <button type="submit" class="button continue" data-translate="create_account">Create account</button>
         </form>
 
         <div class="social-auth">
@@ -51,7 +92,7 @@
                 <span data-translate="or">or</span>
             </div>
             <button class="social-button google">
-                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDQ4IDQ4Ij48cGF0aCBmaWxsPSIjRkZDMTA3IiBkPSJNNDMuNjExLDIwLjA4M0g0MlYyMEgyNHY4aDExLjMwM2MtMS42NDksNC42NTctNi4wOCw4LTExLjMwMyw4Yy02LjYyNywwLTEyLTUuMzczLTEyLTEyYzAtNi42MjcsNS4zNzMtMTIsMTItMTJjMy4wNTksMCw1Ljg0MiwxLjE1NCw3Ljk2MSwzLjAzOWw1LjY1Ny01LjY1N0MzNC4wNDYsNi4wNTMsMjkuMjY4LDQsMjQsNEMxMi45NTUsNCw0LDEyLjk1NSw0LDI0YzAsMTEuMDQ1LDguOTU1LDIwLDIwLDIwYzExLjA0NSwwLDIwLTguOTU1LDIwLTIwQzQ0LDIyLjY1OSw0My44NjIsMjEuMzUsNDMuNjExLDIwLjA4M3oiLz48cGF0aCBmaWxsPSIjRkYzRDAwIiBkPSJNNi4zMDYsMTQuNjkxbDYuNTcxLDQuODE5QzE0LjY1NSwxNS4xMDgsMTguOTYxLDEyLDI0LDEyYzMuMDU5LDAsNS44NDIsMS4xNTQsNy45NjEsMy4wMzlsNS42NTctNS42NTdDMzQuMDQ2LDYuMDUzLDI5LjI2OCw0LDI0LDRDMTYuMzE4LDQsOS42NTYsOC4zMzcsNi4zMDYsMTQuNjkxeiIvPjxwGF0aCBmaWxsPSIjNENBRjUwIiBkPSJNMjQsNDRjNS4xNjYsMCw5Ljg2LTEuOTc3LDEzLjQwOS01LjE5MmwtNi4xOS01LjIzOEMyOS4yMTEsMzUuMDkxLDI2LjcxNSwzNiwyNCwzNmMtNS4yMDIsMC05LjYxOS0zLjMxNy0xMS4yODMtNy45NDZsLTYuNTIyLDUuMDI1QzkuNTA1LDM5LjU1NiwxNi4yMjcsNDQsMjQsNDR6Ii8+PHBhdGggZmlsbD0iIzE5NzZEMiIgZD0iTTQzLjYxMSwyMC4wODNINDJWMjBIMjR2OGgxMS4zMDNjLTAuNzkyLDIuMjM3LTIuMjMxLDQuMTY2LTQuMDg3LDUuNTcxYzAuMDAxLTAuMDAxLDAuMDAyLTAuMDAxLDAuMDAzLTAuMDAybDYuMTksNS4yMzhDMzYuOTcxLDM5LjIwNSw0NCwzNCw0NCwyNEM0NCwyMi42NTksNDMuODYyLDIxLjM1LDQzLjYxMSwyMC4wODN6Ii8+PC9zdmc+" alt="Google">
+                <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxOCIgaGVpZ2h0PSIxOCIgdmlld0JveD0iMCAwIDQ4IDQ4Ij48cGF0aCBmaWxsPSIjRkZDMTA3IiBkPSJNNDMuNjExLDIwLjA4M0g0MlYyMEgyNHY4aDExLjMwM2MtMS42NDksNC42NTctNi4wOCw4LTExLjMwMyw4Yy02LjYyNywwLTEyLTUuMzczLTEyLTEyYzAtNi42MjcsNS4zNzMtMTIsMTItMTJjMy4wNTksMCw1Ljg0MiwxLjE1NCw3Ljk2MSwzLjAzOWw1LjY1Ny01LjY1N0MzNC4wNDYsNi4wNTMsMjkuMjY4LDQsMjQsNEMxMi45NTUsNCw0LDEyLjk1NSw0LDI0YzAsMTEuMDQ1LDguOTU1LDIwLDIwLDIwYzExLjA0NSwwLDIwLTguOTU1LDIwLTIwQzQ0LDIyLjY1OSw0My44NjIsMjEuMzUsNDMuNjExLDIwLjA4M3oiLz48cGF0aCBmaWxsPSIjRkYzRDAwIiBkPSJNNi4zMDYsMTQuNjkxbDYuNTcxLDQuODE5QzE0LjY1NSwxNS4xMDgsMTguOTYxLDEyLDI0LDEyYzMuMDU5LDAsNS44NDIsMS4xNTQsNy45NjEsMy4wMzlsNS42NTctNS42NTdDMzQuMDQ2LDYuMDUzLDI5LjI2OCw0LDI0LDRDMTYuMzE4LDQsOS42NTYsOC4zMzcsNi4zMDYsMTQuNjkxeiIvPjxwYXRoIGZpbGw9IiM0Q0FGNTAiIGQ9Ik0yNCw0NGM1LjE2NiwwLDkuODYtMS45NzcsMTMuNDA5LTUuMTkybC02LjE5LTUuMjM4QzI5LjIxMSwzNS4wOTEsMjYuNzE1LDM2LDI0LDM2Yy01LjIwMiwwLTkuNjE5LTMuMzE3LTExLjI4My03Ljk0NmwtNi41MjIsNS4wMjVDOS41MDUsMzkuNTU2LDE2LjIyNyw0NCwyNCw0NHoiLz48cGF0aCBmaWxsPSIjMTk3NkQyIiBkPSJNNDMuNjExLDIwLjA4M0g0MlYyMEgyNHY4aDExLjMwM2MtMC43OTIsMi4yMzctMi4yMzEsNC4xNjYtNC4wODcsNS41NzFjMC4wMDEtMC4wMDEsMC4wMDItMC4wMDEsMC4wMDMtMC4wMDJsNi4xOSw1LjIzOEMzNi45NzEsMzkuMjA1LDQ0LDM0LDQ0LDI0QzQ0LDIyLjY1OSw0My44NjIsMjEuMzUsNDMuNjExLDIwLjA4M3oiLz48L3N2Zz4=" alt="Google">
                 <span data-translate="continue_with_google">Continue with Google</span>
             </button>
             <button class="social-button facebook">
@@ -78,7 +119,6 @@
 {% block scripts %}
 <script>
     document.addEventListener('DOMContentLoaded', function() {
-        // Initialize translations
         if (typeof loadTranslations === 'function') {
             loadTranslations('en');
         }

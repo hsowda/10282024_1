@@ -33,13 +33,9 @@ function updatePageTranslations() {
 // Initialize language handling
 function initializeLanguageHandling() {
     try {
-        // Get stored language preference from localStorage or default to 'en'
         currentLanguage = localStorage.getItem('preferred_language') || 'en';
-        
-        // Load translations for the current language
         loadTranslations(currentLanguage);
         
-        // Try to initialize language selector if present
         const languageSelect = document.getElementById('language');
         if (languageSelect) {
             languageSelect.value = currentLanguage;
@@ -54,55 +50,11 @@ function initializeLanguageHandling() {
     }
 }
 
-// Main initialization
-document.addEventListener('DOMContentLoaded', function() {
-    try {
-        // Initialize language handling first
-        initializeLanguageHandling();
-        
-        // Initialize form handling
-        const loginForm = document.getElementById('login-form');
-        const registerForm = document.getElementById('register-form');
-        
-        if (loginForm) {
-            loginForm.addEventListener('submit', function(e) {
-                const emailInput = document.getElementById('login-email');
-                const passwordInput = document.getElementById('login-password');
-                
-                if (!emailInput?.value || !passwordInput?.value) {
-                    e.preventDefault();
-                    alert('Please fill in all fields!');
-                }
-            });
-        }
-        
-        if (registerForm) {
-            registerForm.addEventListener('submit', function(e) {
-                const passwordInput = document.getElementById('register-password');
-                const confirmPasswordInput = document.getElementById('register-confirm-password');
-                
-                if (!passwordInput?.value || !confirmPasswordInput?.value) {
-                    e.preventDefault();
-                    alert('Please fill in all password fields!');
-                    return;
-                }
-                
-                if (passwordInput.value !== confirmPasswordInput.value) {
-                    e.preventDefault();
-                    alert('Passwords do not match!');
-                    return;
-                }
-                
-                if (passwordInput.value.length < 8) {
-                    e.preventDefault();
-                    alert('Password must be at least 8 characters long!');
-                }
-            });
-        }
-    } catch (error) {
-        console.warn('Initialization error:', error.message);
-    }
-});
+// Form validation
+function validateEmail(email) {
+    const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return re.test(email.toLowerCase());
+}
 
 // Auth mode toggling
 function toggleAuthMode(event) {
@@ -116,6 +68,18 @@ function toggleAuthMode(event) {
         console.warn('Required elements not found');
         return;
     }
+
+    // Reset forms
+    loginForm.reset();
+    registerForm.reset();
+    
+    // Reset two-step login state
+    const passwordGroup = document.getElementById('login-password-group');
+    const continueBtn = document.getElementById('continue-btn');
+    const signinBtn = document.getElementById('signin-btn');
+    if (passwordGroup) passwordGroup.style.display = 'none';
+    if (continueBtn) continueBtn.style.display = 'block';
+    if (signinBtn) signinBtn.style.display = 'none';
 
     if (loginForm.style.display !== 'none') {
         loginForm.style.display = 'none';
@@ -139,7 +103,7 @@ function toggleAuthMode(event) {
     updatePageTranslations();
 }
 
-// Auth continuation
+// Two-step login handling
 function continueAuth() {
     const emailInput = document.getElementById('login-email');
     const passwordGroup = document.getElementById('login-password-group');
@@ -151,10 +115,77 @@ function continueAuth() {
         return;
     }
     
-    if (emailInput.value) {
-        passwordGroup.style.display = 'block';
-        continueBtn.style.display = 'none';
-        signinBtn.style.display = 'block';
-        document.getElementById('login-password')?.focus();
+    // Validate email
+    if (!emailInput.value || !validateEmail(emailInput.value)) {
+        emailInput.classList.add('error');
+        const alert = document.createElement('div');
+        alert.className = 'alert';
+        alert.textContent = 'Please enter a valid email address';
+        emailInput.parentNode.insertBefore(alert, emailInput.nextSibling);
+        return;
     }
+    
+    // Remove any existing error messages
+    const existingAlert = emailInput.parentNode.querySelector('.alert');
+    if (existingAlert) {
+        existingAlert.remove();
+    }
+    emailInput.classList.remove('error');
+    
+    // Show password field and switch buttons
+    passwordGroup.style.display = 'block';
+    continueBtn.style.display = 'none';
+    signinBtn.style.display = 'block';
+    
+    // Focus password field
+    document.getElementById('login-password')?.focus();
 }
+
+// Main initialization
+document.addEventListener('DOMContentLoaded', function() {
+    try {
+        initializeLanguageHandling();
+        
+        // Initialize form validation
+        const loginForm = document.getElementById('login-form');
+        const registerForm = document.getElementById('register-form');
+        
+        if (loginForm) {
+            loginForm.addEventListener('submit', function(e) {
+                const emailInput = document.getElementById('login-email');
+                const passwordInput = document.getElementById('login-password');
+                
+                if (!emailInput?.value || !passwordInput?.value) {
+                    e.preventDefault();
+                    alert('Please fill in all fields');
+                }
+            });
+        }
+        
+        if (registerForm) {
+            registerForm.addEventListener('submit', function(e) {
+                const passwordInput = document.getElementById('register-password');
+                const confirmPasswordInput = document.getElementById('register-confirm-password');
+                
+                if (!passwordInput?.value || !confirmPasswordInput?.value) {
+                    e.preventDefault();
+                    alert('Please fill in all password fields');
+                    return;
+                }
+                
+                if (passwordInput.value !== confirmPasswordInput.value) {
+                    e.preventDefault();
+                    alert('Passwords do not match');
+                    return;
+                }
+                
+                if (passwordInput.value.length < 8) {
+                    e.preventDefault();
+                    alert('Password must be at least 8 characters long');
+                }
+            });
+        }
+    } catch (error) {
+        console.warn('Initialization error:', error.message);
+    }
+});
