@@ -1,192 +1,207 @@
 :root {
-    --primary-color: #3665f3;
-    --primary-hover: #2b4fb4;
-    --text-color: #111820;
-    --bg-color: #ffffff;
+    --primary-color: #3b82f6;
+    --primary-hover: #2563eb;
+    --text-color: #1f2937;
+    --bg-color: #f3f4f6;
+    --card-bg: #ffffff;
     --border-color: #e5e7eb;
-    --error-color: #e0103a;
+    --modal-overlay: rgba(0, 0, 0, 0.5);
 }
 
+/* Base styles */
 body {
     margin: 0;
-    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen-Sans, Ubuntu, Cantarell, sans-serif;
+    font-family: system-ui, -apple-system, sans-serif;
     color: var(--text-color);
+}
+
+.min-h-screen {
+    min-height: 100vh;
+}
+
+.bg-gray-100 {
     background-color: var(--bg-color);
-    line-height: 1.4;
 }
 
-.auth-container {
-    max-width: 400px;
-    margin: 80px auto;
-    padding: 20px;
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 1rem;
 }
 
-.auth-box {
-    background: white;
-    padding: 48px;
-    border-radius: 4px;
+/* Card styles */
+.card {
+    background-color: var(--card-bg);
+    padding: 1.5rem;
+    border-radius: 0.5rem;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 1rem;
 }
 
-.auth-title {
-    font-size: 28px;
-    text-align: center;
-    margin-bottom: 12px;
-    color: var(--text-color);
-    font-weight: 700;
+/* Typography */
+.title {
+    font-size: 1.875rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
 }
 
-.auth-subtitle {
-    text-align: center;
-    margin-bottom: 32px;
-    font-size: 14px;
+.subtitle {
+    margin-bottom: 1rem;
 }
 
-.auth-subtitle a {
-    color: var(--primary-color);
-    text-decoration: none;
-    margin-left: 4px;
+/* Form styles */
+.form-group {
+    margin-bottom: 1rem;
 }
 
-.auth-subtitle a:hover {
-    text-decoration: underline;
+.label {
+    display: block;
+    margin-bottom: 0.5rem;
 }
 
-.auth-form {
-    margin-bottom: 32px;
-}
-
-.form-input {
+.input {
     width: 100%;
-    padding: 14px;
+    padding: 0.5rem;
     border: 1px solid var(--border-color);
-    border-radius: 8px;
-    margin-bottom: 16px;
-    font-size: 16px;
+    border-radius: 0.25rem;
     box-sizing: border-box;
 }
 
-.form-input:focus {
-    outline: none;
-    border-color: var(--primary-color);
-    box-shadow: 0 0 0 2px rgba(54, 101, 243, 0.2);
-}
-
+/* Button styles */
 .button {
-    width: 100%;
-    padding: 14px;
-    border: none;
-    border-radius: 24px;
-    font-size: 16px;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
     cursor: pointer;
-    transition: background-color 0.2s;
-    font-weight: 500;
+    border: none;
+    font-size: 1rem;
+    text-decoration: none;
+    display: inline-block;
 }
 
-.button.continue {
-    background: var(--primary-color);
+.button.primary {
+    background-color: turquoise;
     color: white;
 }
 
-.button.continue:hover {
-    background: var(--primary-hover);
+.button.primary:hover {
+    background-color: #30d5c8;
 }
 
-.stay-signed {
+.button.secondary {
+    background-color: transparent;
+    border: 1px solid turquoise;
+    color: turquoise;
+}
+
+.button-group {
+    margin-top: 1rem;
+}
+
+/* Ad Container styles */
+.ad-container {
+    width: 100%;
+    max-width: 600px;
+    margin: 1rem auto;
+    background-color: var(--bg-color);
+    border-radius: 0.5rem;
+    overflow: hidden;
+}
+
+/* Modal styles */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--modal-overlay);
     display: flex;
+    justify-content: center;
     align-items: center;
-    margin: 20px 0;
-    gap: 8px;
+    z-index: 1000;
 }
 
-.stay-signed input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
+.modal-content {
+    background-color: var(--card-bg);
+    border-radius: 0.5rem;
+    width: 90%;
+    max-width: 800px;
+    max-height: 90vh;
+    overflow: hidden;
+    position: relative;
+}
+
+.modal-header {
+    padding: 1rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.modal-header h2 {
     margin: 0;
-    border: 1px solid var(--border-color);
-    border-radius: 4px;
+    font-size: 1.5rem;
 }
 
-.stay-signed label {
-    font-size: 14px;
+.modal-close {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    padding: 0.5rem;
     color: var(--text-color);
 }
 
-.divider {
-    text-align: center;
-    position: relative;
-    margin: 32px 0;
+.modal-body {
+    padding: 1rem;
 }
 
-.divider::before,
-.divider::after {
-    content: '';
-    position: absolute;
-    top: 50%;
-    width: 45%;
-    height: 1px;
-    background: var(--border-color);
-}
-
-.divider::before {
-    left: 0;
-}
-
-.divider::after {
-    right: 0;
-}
-
-.divider span {
-    background: white;
-    padding: 0 16px;
-    color: #666;
-    font-size: 14px;
-}
-
-.social-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    padding: 14px;
-    margin-bottom: 16px;
-    border: 1px solid var(--border-color);
-    border-radius: 24px;
-    background: white;
+/* Watch Now button styles */
+.watch-now-button {
+    background-color: turquoise;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
     cursor: pointer;
-    font-size: 16px;
-    gap: 16px;
-    transition: background-color 0.2s;
+    border: none;
+    font-size: 1rem;
+    margin: 0.5rem;
+    title: "Trending";
 }
 
-.social-button:hover {
-    background: #f8f8f8;
+.watch-now-button:hover {
+    background-color: #30d5c8;
 }
 
-.social-button img {
-    width: 20px;
-    height: 20px;
+/* Utility classes */
+.hidden {
+    display: none;
 }
 
+/* Alert styles */
 .alert {
-    background: #fff4f4;
-    border: 1px solid var(--error-color);
-    color: var(--error-color);
-    padding: 12px;
-    border-radius: 4px;
-    margin: 16px auto;
-    max-width: 400px;
-    font-size: 14px;
-    text-align: center;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 0.25rem;
 }
 
-@media (max-width: 480px) {
-    .auth-container {
-        margin: 20px auto;
-        padding: 16px;
+/* Responsive design */
+@media (max-width: 640px) {
+    .container {
+        padding: 0.5rem;
     }
     
-    .auth-box {
-        padding: 32px 24px;
+    .card {
+        padding: 1rem;
+    }
+    
+    .title {
+        font-size: 1.5rem;
+    }
+    
+    .modal-content {
+        width: 95%;
+        margin: 1rem;
     }
 }
