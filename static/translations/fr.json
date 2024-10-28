@@ -3,7 +3,7 @@
     "select_language": "Sélectionner la langue :",
     "signup": "S'inscrire",
     "login": "Se connecter",
-    "login_title": "Se connecter à Adbay",
+    "login_title": "Connectez-vous à votre compte",
     "signup_title": "S'inscrire sur Adbay",
     "username": "Nom d'utilisateur",
     "email": "Email",
@@ -13,5 +13,15 @@
     "created_by": "Créé par Hunter Sowda | À propos de moi",
     "logout": "Déconnexion",
     "watch_now": "blogs",
-    "watch_trending": "Tendances"
+    "watch_trending": "Tendances",
+    "continue_with_google": "Continuer avec Google",
+    "continue_with_facebook": "Continuer avec Facebook",
+    "continue_with_apple": "Continuer avec Apple",
+    "stay_signed_in": "Rester connecté",
+    "new_to_adbay": "Nouveau sur Adbay ?",
+    "create_account": "Créer un compte",
+    "continue": "Continuer",
+    "or": "ou",
+    "enter_password": "Veuillez saisir votre mot de passe pour continuer",
+    "sign_in_different": "Se connecter avec un compte différent"
 }

@@ -1,5 +1,5 @@
 import os
-from flask import Flask, render_template, request, jsonify, flash, redirect, url_for
+from flask import Flask, render_template, request, jsonify, flash, redirect, url_for, session
 from flask_sqlalchemy import SQLAlchemy
 from sqlalchemy.orm import DeclarativeBase
 from werkzeug.security import generate_password_hash, check_password_hash
@@ -13,7 +13,7 @@ db = SQLAlchemy(model_class=Base)
 app = Flask(__name__)
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'login'
+login_manager.login_view = 'auth'
 login_manager.login_message = 'Please log in to access this page.'
 
 # Configuration
@@ -48,24 +48,50 @@ def index():
 def dashboard():
     return render_template('dashboard.html')
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
+@app.route('/auth', methods=['GET', 'POST'])
+def auth():
     from models import User
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
         
     if request.method == 'POST':
-        email = request.form['email']
+        email_or_username = request.form['email_or_username']
+        # First step of eBay-style authentication
+        user = User.query.filter(
+            (User.email == email_or_username) | 
+            (User.username == email_or_username)
+        ).first()
+        
+        if user:
+            session['auth_user_id'] = user.id
+            return redirect(url_for('password'))
+        else:
+            flash('Account not found. Please check your email/username or sign up.')
+            
+    return render_template('auth.html')
+
+@app.route('/password', methods=['GET', 'POST'])
+def password():
+    from models import User
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
+        
+    if 'auth_user_id' not in session:
+        return redirect(url_for('auth'))
+        
+    if request.method == 'POST':
+        user = User.query.get(session['auth_user_id'])
         password = request.form['password']
-        user = User.query.filter_by(email=email).first()
+        stay_signed_in = 'staySignedIn' in request.form
         
         if user and check_password_hash(user.password_hash, password):
-            login_user(user)
+            login_user(user, remember=stay_signed_in)
+            session.pop('auth_user_id', None)
             return redirect(url_for('dashboard'))
         else:
-            flash('Invalid email or password.')
+            flash('Invalid password.')
             
-    return render_template('login.html')
+    return render_template('password.html')
 
 @app.route('/logout', methods=['POST'])
 @login_required
@@ -99,11 +125,10 @@ def signup():
         return redirect(url_for('index'))
     
     # Create new user
-    user = User(
-        username=username,
-        email=email,
-        password_hash=generate_password_hash(password)
-    )
+    user = User()
+    user.username = username
+    user.email = email
+    user.password_hash = generate_password_hash(password)
     
     db.session.add(user)
     try:
