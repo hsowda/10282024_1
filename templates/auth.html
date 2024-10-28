@@ -1,0 +1,114 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="auth-container">
+    <div class="logo-section">
+        <h1 class="title">Adbay ♣</h1>
+    </div>
+
+    <div class="auth-box">
+        <h2 class="auth-title" data-translate="signin_title">Sign in to your account</h2>
+        <p class="auth-subtitle">
+            <span data-translate="new_to_adbay">New to Adbay?</span>
+            <a href="#" onclick="toggleAuthMode(event)" data-translate="create_account">Create account</a>
+        </p>
+
+        <!-- Login Form -->
+        <form id="login-form" action="{{ url_for('login') }}" method="POST" class="auth-form">
+            <div class="form-group">
+                <input type="email" id="login-email" name="email" required class="form-input" placeholder="Email or username">
+            </div>
+            <div class="form-group" id="login-password-group" style="display: none;">
+                <input type="password" id="login-password" name="password" class="form-input" placeholder="Password">
+                <div class="stay-signed">
+                    <input type="checkbox" id="stay-signed" name="remember">
+                    <label for="stay-signed" data-translate="stay_signed">Stay signed in</label>
+                </div>
+            </div>
+            <button type="button" onclick="continueAuth()" id="continue-btn" class="button primary full-width" data-translate="continue">Continue</button>
+            <button type="submit" id="signin-btn" class="button primary full-width" style="display: none;" data-translate="signin">Sign in</button>
+        </form>
+
+        <!-- Register Form -->
+        <form id="register-form" action="{{ url_for('signup') }}" method="POST" class="auth-form" style="display: none;">
+            <div class="form-group">
+                <input type="text" id="register-username" name="username" required class="form-input" placeholder="Username">
+            </div>
+            <div class="form-group">
+                <input type="email" id="register-email" name="email" required class="form-input" placeholder="Email">
+            </div>
+            <div class="form-group">
+                <input type="password" id="register-password" name="password" required class="form-input" placeholder="Password">
+            </div>
+            <div class="form-group">
+                <input type="password" id="register-confirm-password" name="confirmPassword" required class="form-input" placeholder="Confirm password">
+            </div>
+            <button type="submit" class="button primary full-width" data-translate="create_account">Create account</button>
+        </form>
+
+        <div class="social-auth">
+            <div class="divider">
+                <span data-translate="or">or</span>
+            </div>
+            <button class="social-button google">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Google_%22G%22_Logo.svg" alt="Google">
+                <span data-translate="continue_with_google">Continue with Google</span>
+            </button>
+            <button class="social-button facebook">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg" alt="Facebook">
+                <span data-translate="continue_with_facebook">Continue with Facebook</span>
+            </button>
+            <button class="social-button apple">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/f/fa/Apple_logo_black.svg" alt="Apple">
+                <span data-translate="continue_with_apple">Continue with Apple</span>
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function toggleAuthMode(event) {
+    event.preventDefault();
+    const loginForm = document.getElementById('login-form');
+    const registerForm = document.getElementById('register-form');
+    const authTitle = document.querySelector('.auth-title');
+    const authSubtitle = document.querySelector('.auth-subtitle');
+
+    if (loginForm.style.display !== 'none') {
+        loginForm.style.display = 'none';
+        registerForm.style.display = 'block';
+        authTitle.setAttribute('data-translate', 'create_account_title');
+        authTitle.textContent = translations[currentLanguage]['create_account_title'] || 'Create an account';
+        authSubtitle.innerHTML = `
+            <span data-translate="already_have_account">Already have an account?</span>
+            <a href="#" onclick="toggleAuthMode(event)" data-translate="signin_link">Sign in</a>
+        `;
+    } else {
+        loginForm.style.display = 'block';
+        registerForm.style.display = 'none';
+        authTitle.setAttribute('data-translate', 'signin_title');
+        authTitle.textContent = translations[currentLanguage]['signin_title'] || 'Sign in to your account';
+        authSubtitle.innerHTML = `
+            <span data-translate="new_to_adbay">New to Adbay?</span>
+            <a href="#" onclick="toggleAuthMode(event)" data-translate="create_account">Create account</a>
+        `;
+    }
+    updatePageTranslations();
+}
+
+function continueAuth() {
+    const emailInput = document.getElementById('login-email');
+    const passwordGroup = document.getElementById('login-password-group');
+    const continueBtn = document.getElementById('continue-btn');
+    const signinBtn = document.getElementById('signin-btn');
+    
+    if (emailInput.value) {
+        passwordGroup.style.display = 'block';
+        continueBtn.style.display = 'none';
+        signinBtn.style.display = 'block';
+    }
+}
+</script>
+{% endblock %}
