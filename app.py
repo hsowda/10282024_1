@@ -5,7 +5,6 @@ from sqlalchemy.orm import DeclarativeBase
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user, UserMixin
 import json
-import uuid
 
 class Base(DeclarativeBase):
     pass
@@ -14,7 +13,8 @@ db = SQLAlchemy(model_class=Base)
 app = Flask(__name__)
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'auth'
+login_manager.login_view = 'index'
+login_manager.login_message = 'Please log in to access this page.'
 
 # Configuration
 app.secret_key = os.environ.get("FLASK_SECRET_KEY") or "dev_key_123"
@@ -41,75 +41,83 @@ for lang in ['en', 'es', 'fr']:
 def index():
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
-    return redirect(url_for('auth'))
-
-@app.route('/auth')
-@app.route('/652d0869-c069-481a-8e8d-557fc9ef3531-00-1vz1q6lqhootf.janeway.replit.dev/auth')
-def auth():
-    if current_user.is_authenticated:
-        return redirect(url_for('dashboard'))
     return render_template('auth.html')
 
 @app.route('/dashboard')
+@login_required
 def dashboard():
     return render_template('dashboard.html')
 
-@app.route('/login', methods=['POST'])
+@app.route('/login', methods=['GET', 'POST'])
 def login():
+    from models import User
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
         
-    username = request.form['username']
-    password = request.form['password']
-    
-    # Accept "12341234" as test credential
-    if username == "12341234" or password == "12341234":
-        user = User.query.filter_by(username="12341234").first()
-        if not user:
-            user = User(
-                username="12341234",
-                password_hash=generate_password_hash("12341234")
-            )
-            db.session.add(user)
-            db.session.commit()
-        login_user(user)
-        return redirect(url_for('dashboard'))
-    
-    flash('Invalid credentials. Use "12341234" as username or password')
-    return redirect(url_for('auth'))
+    if request.method == 'POST':
+        email = request.form['email']
+        password = request.form['password']
+        user = User.query.filter_by(email=email).first()
+        
+        if user and check_password_hash(user.password_hash, password):
+            login_user(user)
+            next_page = request.args.get('next')
+            if not next_page or not next_page.startswith('/'):
+                next_page = url_for('dashboard')
+            return redirect(next_page)
+        else:
+            flash('Invalid email or password.')
+            return redirect(url_for('index'))
+            
+    return redirect(url_for('index'))
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect(url_for('index'))
 
 @app.route('/signup', methods=['POST'])
 def signup():
+    from models import User
+    
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
-        
+    
     username = request.form['username']
+    email = request.form['email']
     password = request.form['password']
     
-    if not all([username, password]):
+    if not all([username, email, password]):
         flash('All fields are required')
-        return redirect(url_for('auth'))
+        return redirect(url_for('index'))
     
-    # Create new user with test credentials
-    if password == "12341234":
-        # Generate a unique username if using test credentials
-        unique_username = f"{username}_{uuid.uuid4().hex[:8]}"
-        user = User(
-            username=unique_username,
-            password_hash=generate_password_hash("12341234")
-        )
-        db.session.add(user)
+    # Check if user exists
+    if User.query.filter_by(username=username).first():
+        flash('Username already exists')
+        return redirect(url_for('index'))
+    
+    if User.query.filter_by(email=email).first():
+        flash('Email already registered')
+        return redirect(url_for('index'))
+    
+    # Create new user
+    user = User(
+        username=username,
+        email=email,
+        password_hash=generate_password_hash(password)
+    )
+    
+    db.session.add(user)
+    try:
         db.session.commit()
         login_user(user)
         return redirect(url_for('dashboard'))
-    
-    flash('Please use "12341234" as password for testing')
-    return redirect(url_for('auth'))
-
-@app.route('/logout')
-def logout():
-    logout_user()
-    return redirect(url_for('auth'))
+    except Exception as e:
+        db.session.rollback()
+        flash('An error occurred. Please try again.')
+        
+    return redirect(url_for('index'))
 
 @app.route('/get_translation/<lang>')
 def get_translation(lang):
@@ -117,5 +125,4 @@ def get_translation(lang):
 
 with app.app_context():
     import models
-    from models import User
     db.create_all()

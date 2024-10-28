@@ -6,7 +6,7 @@ async function loadTranslations(lang) {
     try {
         const response = await fetch(`/get_translation/${lang}`);
         if (!response.ok) {
-            throw new Error('Failed to load translations');
+            return;
         }
         translations = await response.json();
         updatePageTranslations();
@@ -20,24 +20,21 @@ function updatePageTranslations() {
     elements.forEach(element => {
         const key = element.getAttribute('data-translate');
         if (translations[key]) {
-            if (element.tagName.toLowerCase() === 'input' && element.getAttribute('type') === 'submit') {
-                element.value = translations[key];
-            } else {
-                element.textContent = translations[key];
-            }
+            element.textContent = translations[key];
         }
     });
 }
 
+// Initialize language handling
 function initializeLanguageHandling() {
-    const languageSelect = document.getElementById('language');
-    if (!languageSelect) {
-        return; // Exit if language selector isn't present
-    }
-    
     currentLanguage = localStorage.getItem('preferred_language') || 'en';
     loadTranslations(currentLanguage);
     
+    const languageSelect = document.getElementById('language');
+    if (!languageSelect) {
+        return; // Silently return if language selector is not present on this page
+    }
+
     languageSelect.value = currentLanguage;
     languageSelect.addEventListener('change', (e) => {
         currentLanguage = e.target.value;
@@ -48,13 +45,13 @@ function initializeLanguageHandling() {
 
 // Form validation
 function initializeForms() {
-    const signupForm = document.querySelector('form[action="/signup"]');
+    const signupForm = document.getElementById('signup-form');
     if (signupForm) {
         signupForm.addEventListener('submit', function(e) {
             const password = document.getElementById('password').value;
-            const confirmPassword = document.getElementById('confirmPassword');
+            const confirmPassword = document.getElementById('confirmPassword').value;
             
-            if (confirmPassword && password !== confirmPassword.value) {
+            if (password !== confirmPassword) {
                 e.preventDefault();
                 alert('Passwords do not match!');
                 return;

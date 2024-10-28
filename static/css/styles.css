@@ -13,19 +13,52 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.d-grid.gap-2 {
-    display: grid;
-    gap: 0.5rem;
+.logo-container {
+    text-align: center;
+    margin-bottom: 40px;
 }
 
-.btn-primary {
-    background-color: var(--primary-color);
-    border-color: var(--primary-color);
+.auth-section {
+    text-align: center;
 }
 
-.btn-primary:hover {
-    background-color: var(--primary-hover);
-    border-color: var(--primary-hover);
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+.auth-form input {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 16px;
+}
+
+.auth-button {
+    padding: 12px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.auth-button:hover {
+    background: var(--primary-hover);
+}
+
+.auth-subtitle {
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.auth-subtitle a {
+    color: var(--primary-color);
+    text-decoration: none;
 }
 
 .separator {
@@ -51,6 +84,16 @@
 
 .separator::after {
     right: 0;
+}
+
+.auth-button.secondary {
+    background: white;
+    color: var(--primary-color);
+    border: 2px solid var(--primary-color);
+}
+
+.auth-button.secondary:hover {
+    background: #f5f5f5;
 }
 
 /* Button styles */
@@ -86,6 +129,11 @@
     max-width: 800px;
 }
 
+/* Utility classes */
+.hidden {
+    display: none !important;
+}
+
 /* Ad container styles */
 .ad-container {
     margin: 20px auto;
@@ -104,24 +152,4 @@
 
 .navbar-light .navbar-nav .nav-link:hover {
     color: var(--primary-color);
-}
-
-/* Login overlay styles */
-.login-overlay {
-    text-align: center;
-    padding: 15px;
-    margin: 10px 0;
-    background-color: rgba(64, 224, 208, 0.1);
-    border: 1px solid var(--primary-color);
-    border-radius: 4px;
-}
-
-.login-overlay a {
-    color: var(--primary-color);
-    text-decoration: none;
-    font-weight: bold;
-}
-
-.login-overlay a:hover {
-    text-decoration: underline;
 }
