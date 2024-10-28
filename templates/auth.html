@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+
+{% block title %}Sign in to your account{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="text-center mb-4">
+                <h1 class="display-6 mb-3" data-translate="login_title">Sign in to your account</h1>
+                <p class="text-body-secondary">
+                    <span data-translate="new_to_adbay">New to Adbay?</span>
+                    <a href="{{ url_for('index') }}#signup-section" class="text-decoration-none" data-translate="create_account">Create account</a>
+                </p>
+            </div>
+            
+            {% with messages = get_flashed_messages() %}
+                {% if messages %}
+                    {% for message in messages %}
+                        <div class="alert alert-danger mb-4">{{ message }}</div>
+                    {% endfor %}
+                {% endif %}
+            {% endwith %}
+            
+            <form action="{{ url_for('auth') }}" method="POST" class="mb-4">
+                <div class="form-floating mb-3">
+                    <input type="text" class="form-control" id="email_or_username" name="email_or_username" placeholder="Email or username" required>
+                    <label for="email_or_username">Email or username</label>
+                </div>
+                <button type="submit" class="btn btn-primary w-100 py-2" data-translate="continue">Continue</button>
+            </form>
+
+            <div class="text-center position-relative mb-4">
+                <hr class="text-body-secondary">
+                <span class="position-absolute top-50 start-50 translate-middle px-3 bg-body" data-translate="or">or</span>
+            </div>
+
+            <div class="d-grid gap-2 mb-4">
+                <button class="btn btn-outline-secondary d-flex align-items-center justify-content-center gap-2" data-translate="continue_with_google">
+                    <img src="https://www.google.com/favicon.ico" alt="Google" width="20" height="20">
+                    Continue with Google
+                </button>
+                <button class="btn btn-outline-secondary d-flex align-items-center justify-content-center gap-2" data-translate="continue_with_facebook">
+                    <img src="https://www.facebook.com/favicon.ico" alt="Facebook" width="20" height="20">
+                    Continue with Facebook
+                </button>
+                <button class="btn btn-outline-secondary d-flex align-items-center justify-content-center gap-2" data-translate="continue_with_apple">
+                    <img src="https://www.apple.com/favicon.ico" alt="Apple" width="20" height="20">
+                    Continue with Apple
+                </button>
+            </div>
+
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="staySignedIn" name="staySignedIn">
+                <label class="form-check-label" for="staySignedIn" data-translate="stay_signed_in">
+                    Stay signed in
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
