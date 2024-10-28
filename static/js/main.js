@@ -46,7 +46,31 @@ function initializeLanguageHandling() {
     });
 }
 
+// Form validation
+function initializeForms() {
+    const signupForm = document.querySelector('form[action="/signup"]');
+    if (signupForm) {
+        signupForm.addEventListener('submit', function(e) {
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword');
+            
+            if (confirmPassword && password !== confirmPassword.value) {
+                e.preventDefault();
+                alert('Passwords do not match!');
+                return;
+            }
+            
+            if (password.length < 8) {
+                e.preventDefault();
+                alert('Password must be at least 8 characters long!');
+                return;
+            }
+        });
+    }
+}
+
 // Initialize everything when DOM is loaded
 document.addEventListener('DOMContentLoaded', function() {
     initializeLanguageHandling();
+    initializeForms();
 });

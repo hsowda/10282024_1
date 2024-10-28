@@ -5,6 +5,7 @@ from sqlalchemy.orm import DeclarativeBase
 from werkzeug.security import generate_password_hash, check_password_hash
 from flask_login import LoginManager, login_user, login_required, logout_user, current_user, UserMixin
 import json
+import uuid
 
 class Base(DeclarativeBase):
     pass
@@ -75,6 +76,34 @@ def login():
         return redirect(url_for('dashboard'))
     
     flash('Invalid credentials. Use "12341234" as username or password')
+    return redirect(url_for('auth'))
+
+@app.route('/signup', methods=['POST'])
+def signup():
+    if current_user.is_authenticated:
+        return redirect(url_for('dashboard'))
+        
+    username = request.form['username']
+    password = request.form['password']
+    
+    if not all([username, password]):
+        flash('All fields are required')
+        return redirect(url_for('auth'))
+    
+    # Create new user with test credentials
+    if password == "12341234":
+        # Generate a unique username if using test credentials
+        unique_username = f"{username}_{uuid.uuid4().hex[:8]}"
+        user = User(
+            username=unique_username,
+            password_hash=generate_password_hash("12341234")
+        )
+        db.session.add(user)
+        db.session.commit()
+        login_user(user)
+        return redirect(url_for('dashboard'))
+    
+    flash('Please use "12341234" as password for testing')
     return redirect(url_for('auth'))
 
 @app.route('/logout')

@@ -18,6 +18,9 @@
             <!-- Login Section -->
             <div id="login-section">
                 <h2 class="h3 mb-3" data-translate="login_title">Sign in to your account</h2>
+                <p class="text-muted">
+                    New to Adbay? <a href="#" onclick="showSection('signup')" class="text-decoration-none">Create account</a>
+                </p>
 
                 <form action="{{ url_for('login') }}" method="POST" class="needs-validation" novalidate>
                     <div class="form-floating mb-3">
@@ -30,13 +33,50 @@
                     </div>
                     <div class="d-grid">
                         <button type="submit" class="btn btn-primary btn-lg" data-translate="login">Login</button>
+                        <div class="separator">or</div>
+                        <button type="button" onclick="showSection('signup')" class="btn btn-outline-primary btn-lg" data-translate="signup">Sign Up</button>
                     </div>
                     <div class="text-muted mt-2">
                         <small>Use "12341234" as username or password to test</small>
                     </div>
                 </form>
             </div>
+
+            <!-- Sign Up Section -->
+            <div id="signup-section" style="display: none;">
+                <h2 class="h3 mb-3" data-translate="signup_title">Create your account</h2>
+                <p class="text-muted">
+                    Already have an account? <a href="#" onclick="showSection('login')" class="text-decoration-none">Sign in</a>
+                </p>
+
+                <form action="{{ url_for('signup') }}" method="POST" class="needs-validation" novalidate>
+                    <div class="form-floating mb-3">
+                        <input type="text" class="form-control" id="username" name="username" placeholder="Username" required>
+                        <label for="username" data-translate="username">Username</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="password" name="password" placeholder="Password" required>
+                        <label for="password" data-translate="password">Password</label>
+                    </div>
+                    <div class="form-floating mb-3">
+                        <input type="password" class="form-control" id="confirmPassword" name="confirmPassword" placeholder="Confirm Password" required>
+                        <label for="confirmPassword" data-translate="confirm_password">Confirm Password</label>
+                    </div>
+                    <div class="d-grid">
+                        <button type="submit" class="btn btn-primary btn-lg" data-translate="signup">Sign Up</button>
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function showSection(section) {
+    document.getElementById('login-section').style.display = section === 'login' ? 'block' : 'none';
+    document.getElementById('signup-section').style.display = section === 'signup' ? 'block' : 'none';
+}
+</script>
 {% endblock %}
