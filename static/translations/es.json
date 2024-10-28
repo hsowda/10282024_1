@@ -3,7 +3,7 @@
     "select_language": "Seleccionar idioma:",
     "signup": "Registrarse",
     "login": "Iniciar sesión",
-    "login_title": "Iniciar sesión en Adbay",
+    "login_title": "Inicia sesión en tu cuenta",
     "signup_title": "Registrarse en Adbay",
     "username": "Nombre de usuario",
     "email": "Correo electrónico",
@@ -13,5 +13,15 @@
     "created_by": "Creado por Hunter Sowda | Sobre mí",
     "logout": "Cerrar sesión",
     "watch_now": "blogs",
-    "watch_trending": "Tendencias"
+    "watch_trending": "Tendencias",
+    "continue_with_google": "Continuar con Google",
+    "continue_with_facebook": "Continuar con Facebook",
+    "continue_with_apple": "Continuar con Apple",
+    "stay_signed_in": "Mantener sesión iniciada",
+    "new_to_adbay": "¿Nuevo en Adbay?",
+    "create_account": "Crear cuenta",
+    "continue": "Continuar",
+    "or": "o",
+    "enter_password": "Por favor, ingresa tu contraseña para continuar",
+    "sign_in_different": "Iniciar sesión con una cuenta diferente"
 }
