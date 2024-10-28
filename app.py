@@ -13,7 +13,7 @@ db = SQLAlchemy(model_class=Base)
 app = Flask(__name__)
 login_manager = LoginManager()
 login_manager.init_app(app)
-login_manager.login_view = 'index'
+login_manager.login_view = 'login'
 login_manager.login_message = 'Please log in to access this page.'
 
 # Configuration
@@ -41,7 +41,7 @@ for lang in ['en', 'es', 'fr']:
 def index():
     if current_user.is_authenticated:
         return redirect(url_for('dashboard'))
-    return render_template('auth.html')
+    return render_template('index.html')
 
 @app.route('/dashboard')
 @login_required
@@ -61,20 +61,17 @@ def login():
         
         if user and check_password_hash(user.password_hash, password):
             login_user(user)
-            next_page = request.args.get('next')
-            if not next_page or not next_page.startswith('/'):
-                next_page = url_for('dashboard')
-            return redirect(next_page)
+            return redirect(url_for('dashboard'))
         else:
             flash('Invalid email or password.')
-            return redirect(url_for('index'))
             
-    return redirect(url_for('index'))
+    return render_template('login.html')
 
-@app.route('/logout')
+@app.route('/logout', methods=['POST'])
 @login_required
 def logout():
     logout_user()
+    flash('You have been logged out.')
     return redirect(url_for('index'))
 
 @app.route('/signup', methods=['POST'])
@@ -111,7 +108,8 @@ def signup():
     db.session.add(user)
     try:
         db.session.commit()
-        login_user(user)
+        login_user(user)  # Auto-login after signup
+        flash('Registration successful!')
         return redirect(url_for('dashboard'))
     except Exception as e:
         db.session.rollback()
